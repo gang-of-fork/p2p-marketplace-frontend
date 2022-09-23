@@ -1,5 +1,4 @@
 <script>
-	import Counter from '$lib/Counter.svelte';
 	import { page } from '$app/stores';
 </script>
 
@@ -11,7 +10,7 @@
 <section>
 	<h2>Arbeiten an:</h2>
 	<li class:active={$page.url.pathname === '/'}>
-        <a href="/home">Home</a>
+        <a href="/">Home</a>
     </li>
     <li class:active={$page.url.pathname === '/'}>
         <a href="/buy">Buy</a>

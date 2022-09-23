@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import Footer from '../lib/Footer.svelte';
 </script>
 
 
@@ -8,6 +9,9 @@
 	<slot />
 </main>
 
+<footer>
+	<Footer />
+</footer>
 
 
 <style>
@@ -16,6 +20,10 @@
 	}
 
 	footer {
+		position: absolute;
+		bottom: 0;
+		text-align: center;
+		width: 100%;
 		
 	}
 

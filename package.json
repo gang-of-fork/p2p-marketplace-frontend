@@ -11,6 +11,8 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@smui/tab": "^6.1.0",
+		"@smui/tab-bar": "^6.1.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@types/cookie": "^0.5.1",
@@ -26,6 +28,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/fira-mono": "^4.5.0"
+		"@fontsource/fira-mono": "^4.5.0",
+		"svelte-material-ui": "^6.1.3"
 	}
 }
