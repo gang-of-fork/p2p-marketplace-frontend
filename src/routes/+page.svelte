@@ -16,7 +16,7 @@
         <a href="/buy">Buy</a>
     </li>
     <li class:active={$page.url.pathname === '/'}>
-        <a href="/sell">Sell</a>
+        <a href="/deal">Deal</a>
     </li>
     <li class:active={$page.url.pathname === '/'}>
         <a href="/createListingBuy">CreateListingBuy</a>

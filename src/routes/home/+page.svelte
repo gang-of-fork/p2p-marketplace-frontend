@@ -3,4 +3,4 @@
 	<meta name="description" content="home" />
 </svelte:head>
 
-<h1>Home</h1>
+<h1>´Home</h1>
