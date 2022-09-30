@@ -1,3 +1,7 @@
+# PlantExchange Backend
+PlantExchange is a (soon to be) decentralized and anonymous (through privacy by design) crypto marketplace to find other people to trade crypto-currencies with cash.
+ETH Wallet for donations: 0x8Be39B5764aE787b2227C70baA1dA8204145FaCD
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
