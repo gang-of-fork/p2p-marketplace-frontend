@@ -16,7 +16,7 @@
 	--column-margin-top: 4rem;
 }
 
-body {
+body, html {
 	min-height: 100vh;
 	margin: 0;
 	background-color: var(--primary-color);
