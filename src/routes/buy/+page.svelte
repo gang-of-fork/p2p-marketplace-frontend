@@ -1,9 +1,11 @@
 <script lang="ts">
-	import Tab, { Icon, Label } from '@smui/tab';
+	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import Buy from '../../lib/Buy.svelte';
 	import Sell from '../../lib/Sell.svelte';
-	import Card, { Content } from '@smui/card';
+	import Card from '@smui/card';
+	import { onMount } from 'svelte';
+	import { BACKEND_SERVER } from '../../stores';
 
 	let tabs = [
 		{
@@ -17,6 +19,11 @@
 	];
 	let active = tabs[0];
 	let size = 24;
+
+	onMount(async () => {
+		console.log(await fetch(`${BACKEND_SERVER}/offers`)
+			.then((response) => response.json()) )
+	});
 </script>
 
 <svelte:head>

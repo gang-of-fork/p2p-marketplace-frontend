@@ -1,16 +1,9 @@
 <script lang="ts">
-	import Card, { Content } from '@smui/card';
-	import ImageList, {
-		Item,
-		ImageAspectContainer,
-		Image,
-		Supporting,
-		Label
-	} from '@smui/image-list';
+	import Card from '@smui/card';
+	import { Image } from '@smui/image-list';
 	import Fab from '@smui/fab';
 
 	import Chip, { Set, Text } from '@smui/chips';
-	import Button from '@smui/button';
 
 	export let deal = {
 		fromCurrency: 'ERR',

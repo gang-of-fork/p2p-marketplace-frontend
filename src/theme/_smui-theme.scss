@@ -15,6 +15,7 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  text-align: center;
 }
 
 a {
@@ -25,5 +26,5 @@ a:visited {
 }
 
 .mdc-card {
-  width: min-content;
+  text-align: center;
 }

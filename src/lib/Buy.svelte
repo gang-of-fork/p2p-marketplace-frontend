@@ -1,14 +1,4 @@
 <script lang="ts">
-	import Card, { Content } from '@smui/card';
-	import ImageList, {
-		Item,
-		ImageAspectContainer,
-		Image,
-		Supporting,
-		Label
-	} from '@smui/image-list';
-
-	import Chip, { Set, Text } from '@smui/chips';
 	import Button from '@smui/button';
 
 	import Container from './ContainerBlue.svelte';
