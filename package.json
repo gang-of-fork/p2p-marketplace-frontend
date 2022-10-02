@@ -33,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.5.0",
+		"@sveltejs/adapter-node": "^1.0.0-next.96",
 		"js-cookie": "^3.0.1",
 		"svelte-material-ui": "^6.2.0",
 		"svelte-web3": "^4.0.0",
