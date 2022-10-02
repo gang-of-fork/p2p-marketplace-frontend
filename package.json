@@ -12,6 +12,7 @@
 		"prepare": "smui-theme compile app.css -i src/theme"
 	},
 	"devDependencies": {
+		"@smui/button": "^6.1.4",
 		"@smui/card": "^6.1.0",
 		"@smui/list": "^6.1.0",
 		"@smui/tab": "^6.1.0",
