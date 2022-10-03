@@ -1,6 +1,6 @@
 <svelte:head>
-	<title>createListingBuy</title>
-	<meta name="description" content="createListingBuy" />
+	<title>createListingSell</title>
+	<meta name="description" content="createListingSell" />
 </svelte:head>
 
-<h1>Create Listing Buy</h1>
+<h1>Create Listing Sell</h1>
