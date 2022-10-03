@@ -159,8 +159,8 @@
 		<Cell span={12}>
 			<div class="buttonNav">
 
-				<Button variant="outlined" href="/home" >Back</Button>
-				<Button variant="raised" href="/buy">Search</Button>
+				<Button variant="outlined" href="/app/home" >Back</Button>
+				<Button variant="raised" href="/app/buy">Search</Button>
 
 			</div>
 		</Cell>

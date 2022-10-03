@@ -17,7 +17,7 @@
 		variant="unelevated"
 		color="primary"
 		style="width: 80%; margin: 20px; height: 40%"
-		href="/createListingSell"
+		href="/app/createListingSell"
 
 	>
 		<p>Sell</p>
@@ -27,7 +27,7 @@
 		variant="unelevated"
 		color="primary"
 		style="width: 80%; margin: 20px; height: 40%"
-		href="/createListingBuy"
+		href="/app/createListingBuy"
 	>
 		<p>Buy</p>
 	</Button>
