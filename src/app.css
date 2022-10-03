@@ -5,12 +5,12 @@
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
-	--primary-color: #b9c6d2;
+	--primary-color: #1a1d20;
 	--secondary-color: #d0dde9;
 	--tertiary-color: #edf0f8;
 	--accent-color: #6200ee;
 	--heading-color: rgba(0, 0, 0, 0.7);
-	--text-color: #444444;
+	--text-color: white;
 	--background-without-opacity: rgba(255, 255, 255, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
@@ -20,12 +20,7 @@ body, html {
 	min-height: 100vh;
 	margin: 0;
 	background-color: var(--primary-color);
-	background: linear-gradient(
-		180deg,
-		var(--primary-color) 0%,
-		var(--secondary-color) 10.45%,
-		var(--tertiary-color) 41.35%
-	);
+	background: var(--primary-color);
 }
 
 body::before {
@@ -52,9 +47,11 @@ body::before {
 
 h1,
 h2,
+h3,
+h4,
 p {
 	font-weight: 400;
-	color: var(--heading-color);
+	color: var(--text-color)
 }
 
 p {
@@ -108,4 +105,14 @@ button:focus:not(:focus-visible) {
 
 i {
 	font-size: 50px;
+	color: white !important;
 }
+
+.mdc-card {
+	background-color: #262c31
+  }
+
+  .mdc-tab__text-label{
+	color: var(--text-color) !important;
+  }
+  

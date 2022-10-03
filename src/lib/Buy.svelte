@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Button from '@smui/button';
-
 	import Container from './ContainerBlue.svelte';
 
 	let deals = [
@@ -9,35 +8,40 @@
 			fromAmount: 2,
 			toCurrency: 'EUR',
 			toAmount: 1,
-			range: '2km'
+			range: '2km',
+			chart: ''
 		},
 		{
 			fromCurrency: 'ETH',
 			fromAmount: 7,
 			toCurrency: 'EUR',
 			toAmount: 2,
-			range: '3km'
+			range: '3km',
+			chart: ''
 		},
 		{
-			fromCurrency: 'CAD',
+			fromCurrency: 'ADA',
 			fromAmount: 4,
 			toCurrency: 'EUR',
 			toAmount: 1,
-			range: ''
+			range: '',
+			chart: ''
 		},
 		{
-			fromCurrency: 'CAD',
+			fromCurrency: 'ADA',
 			fromAmount: 3,
-			toCurrency: 'EUR',
+			toCurrency: 'USDT',
 			toAmount: 1,
-			range: ''
+			range: '',
+			chart: ''
 		},
 		{
-			fromCurrency: 'CAD',
+			fromCurrency: 'ADA',
 			fromAmount: 2,
-			toCurrency: 'EUR',
+			toCurrency: 'GBP',
 			toAmount: 1,
-			range: ''
+			range: '',
+			chart: ''
 		}
 	];
 </script>
@@ -47,3 +51,5 @@
 {#each deals as deal}
 	<Container {deal} />
 {/each}
+
+

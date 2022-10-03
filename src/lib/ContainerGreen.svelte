@@ -1,21 +1,30 @@
 <script lang="ts">
 	import Card from '@smui/card';
 	import { Image } from '@smui/image-list';
-	import Fab from '@smui/fab';
-
+	import Fab, { Label } from '@smui/fab';
 	import Chip, { Set, Text } from '@smui/chips';
+	import { onMount } from 'svelte';
 
 	export let deal = {
 		fromCurrency: 'ERR',
 		fromAmount: -1,
 		toCurrency: 'ERR',
 		toAmount: -1,
-		range: ''
+		range: '',
+		chart: ''
 	};
+
+	onMount(async () => {
+		let response = await fetch(
+			`https://api.binance.com/api/v3/avgPrice?symbol=${deal.fromCurrency}${deal.toCurrency}`
+		).then((response) => response.json());
+		var price = parseFloat(response.price);
+		deal.chart = price.toFixed(2);
+	});
 </script>
 
 <div class="card">
-	<Card class="card" padded style="border-radius:15px;">
+	<Card class="card" style="border-radius:15px;">
 		<div class="container">
 			<div class="row-element">
 				<div>
@@ -49,14 +58,29 @@
 
 			<div class="row-element" style="flex: 1">
 				{#if deal.range != ''}
-					<Fab href="/deal">
+					<Fab href="/app/deal">
 						{deal.range}
 					</Fab>
 				{/if}
 			</div>
 
 			<div class="row-element">
-				<Image style="max-width: 75px" src="https://img.icons8.com/plasticine/400/stocks.png" />
+				<img
+					class="cardImage"
+					src="../chartGreen.PNG"
+					alt="background chart"
+					style="max-width: 115px"
+				/>
+				<div class="centered">
+					<Fab
+						extended
+						style="background: rgba(255, 255, 255, 0.38);
+					border-radius: 16px;
+					box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+					backdrop-filter: blur(2.9px);
+					-webkit-backdrop-filter: blur(2.9px); padding: 5px; height: 40px;"><Label>{deal.chart}</Label></Fab
+					>
+				</div>
 			</div>
 		</div>
 	</Card>
@@ -74,5 +98,19 @@
 
 	.card {
 		margin: 10px;
+	}
+
+	.centered {
+		margin-right: 10px;
+	}
+
+	.cardImage {
+		border-top-right-radius: 15px;
+		border-bottom-right-radius: 15px;
+		max-width: 115px;
+		height: 100%;
+		position: absolute;
+		right: 0;
+		top: 0;
 	}
 </style>
