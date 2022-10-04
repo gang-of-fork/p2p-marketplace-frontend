@@ -124,7 +124,7 @@
 				'Authorization': `Bearer ${loginToken}`
 			}
 		})
-			.then((response) => response.json()) )
+			.then((response) => response.text()) )
 	});
 </script>
 

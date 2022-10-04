@@ -96,7 +96,7 @@
 	 * @param {string} publicAddress
 	 */
 	async function handleSignup(publicAddress) {
-		await fetch(`${BACKEND_SERVER}auth/register`, {
+		await fetch(`${BACKEND_SERVER}/auth/register`, {
 			body: JSON.stringify({ publicAddress }),
 			headers: {
 				'Content-Type': 'application/json'

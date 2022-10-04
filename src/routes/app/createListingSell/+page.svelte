@@ -1,14 +1,19 @@
 <script>
-	import { dataset_dev } from 'svelte/internal';
-	import {jwt, BACKEND_SERVER} from '../../stores';
 	import { onMount } from 'svelte';
+	import { BACKEND_SERVER, jwt } from '../../../stores';
+	import { goto } from '$app/navigation';
 
-
-	onMount(async () => {
-		console.log(await fetch(`${BACKEND_SERVER}/offers`)
-			.then((response) => response.json())
-			.then((response) => response.data.name))
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
 	});
+
+
+
+
 </script>
 <svelte:head
 >
@@ -17,3 +22,4 @@
 </svelte:head>
 
 <h1>Create Listing Sell</h1>
+

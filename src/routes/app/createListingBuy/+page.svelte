@@ -6,14 +6,24 @@
 	import Select, { Option } from '@smui/select';
 	import Slider from '@smui/slider';
 	import Button from '@smui/button';
+	import { BACKEND_SERVER, jwt } from '../../../stores';
+	import { goto } from '$app/navigation';
+
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
 
 
 	let currencies = ['EUR', 'USD', 'CAD', 'CNY', 'GBP', 'JPY', 'CHF'];
 	let cryptoCurrencies = ['BTC', 'ETH', 'DOGE'];
 	let fruits = ['BTC', 'ETH', 'DOGE'];
 
-	let valueCurrency = '';
-	let valueCrypto = '';
+	let currency = '';
+	let crypto = '';
 	let valueStart = 400;
 	let valueEnd = 500;
 	let valueRange = 0;
@@ -26,6 +36,13 @@
 	let circle1Color = defaultColor;
 	let circle2Color = defaultColor;
 	let circle3Color = defaultColor;
+
+	onMount(async () => {
+		if (loginToken == '') {
+			goto('/');
+		};
+
+	});
 	
 
 	function valueRangeChange(){
@@ -62,6 +79,39 @@
 		inputValueStart = valueStart;
 
 	}
+
+	async function sendDataBackend(){
+		const newOffer = {
+			"type": "BUY",
+			"location": [
+				0,
+				0
+			],
+			"currrencyAmount": 0,
+			"cryptoAmount": 0,
+			"crypto": crypto,
+			"currency": currency,
+		}
+		console.log(newOffer);		
+		console.log(await fetch(`${BACKEND_SERVER}/offers/`,{
+			headers: {
+				'Authorization': `Bearer ${loginToken}`			},
+			method: 'POST',
+			body: JSON.stringify(newOffer)
+
+		}));
+
+		await fetch(`${BACKEND_SERVER}/offers/`,{
+			headers: {
+				'Authorization': `Bearer ${loginToken}`			},
+			method: 'POST',
+			body: JSON.stringify(newOffer)
+
+		})
+
+		
+
+	}
 	
 </script>
 
@@ -86,7 +136,7 @@
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
-									bind:value={valueCurrency}
+									bind:value={currency}
 									label="Currencies"
 								>
 									<Option value="" />
@@ -99,7 +149,7 @@
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
-									bind:value={valueCrypto}
+									bind:value={crypto}
 									label="Crypto Currencies"
 								>
 									<Option value="" />
@@ -183,8 +233,8 @@
 		<Cell span={12}>
 			<div class="buttonNav">
 
-				<Button variant="outlined" href="/app/home" >Back</Button>
-				<Button variant="raised" href="/app/buy">Search</Button>
+				<Button variant="outlined" href="/app/home">Back</Button>
+				<Button variant="raised" href="/app/buy" on:click={sendDataBackend()}>Search</Button>
 
 			</div>
 		</Cell>

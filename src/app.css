@@ -32,9 +32,11 @@ body::before {
 	top: 0;
 	left: 10vw;
 	z-index: -1;
-	background: radial-gradient(50% 50% at 50% 50%,
-			var(--pure-white) 0%,
-			rgba(255, 255, 255, 0) 100%);
+	background: radial-gradient(
+		50% 50% at 50% 50%,
+		var(--pure-white) 0%,
+		rgba(255, 255, 255, 0) 100%
+	);
 	opacity: 0.05;
 }
 
@@ -50,7 +52,7 @@ h3,
 h4,
 p {
 	font-weight: 400;
-	color: var(--text-color)
+	color: var(--text-color);
 }
 
 p {
@@ -107,8 +109,12 @@ i {
 	color: white !important;
 }
 
-.mdc-card{
-	background-color: #262c31 ;
+.mdc-card {
+	background-color: #262c31;
+}
+
+.smui-paper {
+	background-color: #24272c !important;
 }
 
 .mdc-tab__text-label {
@@ -117,16 +123,16 @@ i {
 
 .mdc-notched-outline__leading,
 .mdc-notched-outline__notch,
-.mdc-notched-outline__trailing{
-	border-color: var(--text-color)  !important;
+.mdc-notched-outline__trailing {
+	border-color: var(--text-color) !important;
 }
 
-.mdc-notched-outline__leading{
+.mdc-notched-outline__leading {
 	border-top-left-radius: 15px !important;
 	border-bottom-left-radius: 15px !important;
 }
 
-.mdc-notched-outline__trailing{
+.mdc-notched-outline__trailing {
 	border-top-right-radius: 15px !important;
 	border-bottom-right-radius: 15px !important;
 }
@@ -134,23 +140,23 @@ i {
 .mdc-floating-label,
 .mdc-text-field__input,
 .mdc-select__selected-text,
-.mdc-deprecated-list-item{
+.mdc-deprecated-list-item {
 	color: var(--text-color) !important;
 }
 
-.mdc-text-field{
+.mdc-text-field {
 	border-radius: 15px !important;
 }
 
-.mdc-dialog__surface{
+.mdc-dialog__surface {
 	background-color: var(--primary-color) !important;
 }
 
-.mdc-dialog__surface{
+.mdc-dialog__surface {
 	height: -webkit-fill-available !important;
 }
 
-.mdc-deprecated-list{
+.mdc-deprecated-list {
 	background-color: #262c31 !important;
 }
 
