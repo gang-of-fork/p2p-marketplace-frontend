@@ -44,6 +44,7 @@
 		for (var deal of deals) {
 			if (
 				(searchValue == '' ||
+					searchValue == undefined ||
 					deal.fromCurrency.includes(searchValue) ||
 					deal.toCurrency.includes(searchValue) ||
 					deal.range.includes(searchValue)) &&
@@ -55,11 +56,8 @@
 					selectedCurrencyTo == undefined)
 			) {
 				searchedDeals.push(deal);
-				console.log(deal);
 			}
 		}
-		console.log(searchedDeals);
-		console.log(selectedCurrencyTo, selectedCurrencyFrom, searchValue);
 	}
 
 	onMount(() => {
@@ -75,7 +73,6 @@
 				toCurrencies.push(deal.toCurrency);
 			}
 		}
-		console.log(fromCurrencies);
 	}
 
 	function resetValues() {

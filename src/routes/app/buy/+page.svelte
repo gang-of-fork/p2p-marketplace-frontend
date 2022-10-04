@@ -1,10 +1,19 @@
-<script lang="ts">
+<script>
 	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import Inserate from '../../../lib/Inserate.svelte';
 	import Card from '@smui/card';
 	import { onMount } from 'svelte';
-	import { BACKEND_SERVER } from '../../../stores';
+	import { BACKEND_SERVER, jwt } from '../../../stores';
+	import { goto } from '$app/navigation';
+
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
 
 	let tabs = [
 		{
@@ -107,7 +116,14 @@
 	let size = 24;
 
 	onMount(async () => {
-		console.log(await fetch(`${BACKEND_SERVER}/offers`)
+		if (loginToken == '') {
+			goto('/');
+		};
+		console.log(await fetch(`${BACKEND_SERVER}/offers`,{
+			headers: {
+				'Authorization': `Bearer ${loginToken}`
+			}
+		})
 			.then((response) => response.json()) )
 	});
 </script>

@@ -24,8 +24,8 @@
       {
         k: 1,
         icon: 'join_left',
-        label: 'Account',
-        route: '/app/matchings',
+        label: 'Matches',
+        route: '/app/matches',
         badge: true
       },
       {
