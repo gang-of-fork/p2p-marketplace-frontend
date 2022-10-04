@@ -12,6 +12,8 @@
 		range: '',
 		chart: ''
 	};
+	export let color = 'Blue';
+	let searchValue = '';
 
 	onMount(async () => {
 		let response = await fetch(
@@ -40,7 +42,14 @@
 				<div style="margin-top: -15px;">
 					<div class="row-element">
 						<Set chips={[deal.fromCurrency]} let:chip nonInteractive>
-							<Chip {chip} style="background-color: #6200ee">
+							<Chip
+								{chip}
+								style="background-color: {color == 'Blue'
+									? '#6200ee'
+									: color == 'Green'
+									? '#018786'
+									: 'white'}"
+							>
 								<Text><span style="color: white;">{chip}</span></Text>
 							</Chip>
 						</Set>
@@ -55,16 +64,23 @@
 				</div>
 			</div>
 
-			<div class="row-element">
+			<div class="row-element" style="flex: 1">
 				{#if deal.range != ''}
-					<Fab href="/app/deal" style="background-color: #6200ee">
+					<Fab
+						href="/app/deal"
+						style="background-color: {color == 'Blue'
+							? '#6200ee'
+							: color == 'Green'
+							? '#018786'
+							: 'white'};"
+					>
 						{deal.range}
 					</Fab>
 				{/if}
 			</div>
 
 			<div class="row-element">
-				<img class="cardImage" src="../chartBlue.PNG" alt="background chart" />
+				<img class="cardImage" src="../chart{color}.PNG" alt="background chart" />
 				<div class="centered">
 					<Fab
 						extended
@@ -101,6 +117,7 @@
 	.cardImage {
 		border-top-right-radius: 15px;
 		border-bottom-right-radius: 15px;
+		max-width: 115px;
 		height: 100%;
 		position: absolute;
 		right: 0;

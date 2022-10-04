@@ -104,10 +104,6 @@
 			method: 'POST'
 		}).then((response) => response.json());
 	}
-
-	function handleStart() {
-		console.log('start');
-	}
 </script>
 
 <svelte:head>
