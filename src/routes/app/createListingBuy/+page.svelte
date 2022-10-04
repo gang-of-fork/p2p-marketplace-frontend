@@ -1,5 +1,6 @@
 <script>
 	import Card from '@smui/card';
+	import { onMount } from 'svelte';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import Select, { Option } from '@smui/select';
@@ -16,8 +17,8 @@
 	let valueStart = 400;
 	let valueEnd = 500;
 	let valueRange = 0;
-	let inputFieldStart;
-	let inputFieldEnd;
+	let inputValueStart = valueStart;
+	let inputValueEnd = valueEnd;
 	const currencyRangeMin = 0;
 	const currencyRangeMax = 1000;
 	let selectedColor = "#76c283";
@@ -42,6 +43,26 @@
 			circle3Color = selectedColor;
 		}
 	}
+
+	function validateInputRange(){
+		if(inputValueStart > currencyRangeMin && inputValueStart < valueEnd){
+			if(inputValueEnd < currencyRangeMax && inputValueEnd > valueStart){
+				valueStart = inputValueStart;
+				valueEnd = inputValueEnd;
+			}else{
+				inputValueEnd = valueEnd;
+			}
+		} else{
+			inputValueStart = valueStart;
+		}
+	}
+
+	function bindRange(){
+		inputValueEnd = valueEnd;
+		inputValueStart = valueStart;
+
+	}
+	
 </script>
 
 <svelte:head>
@@ -108,22 +129,25 @@
 							max={currencyRangeMax}
 							step={0.1}
 							input$aria-label="Range slider"
+							on:change={bindRange}
 						/>
 					</div>
 					<div style="text-align:center">
 						<input
-							bind:value={valueStart}
+							bind:value={inputValueStart}
 							class="inputFields"
 							type="number"
 							min={currencyRangeMin}
 							max={valueEnd}
+							on:change={validateInputRange}
 						/>
 						<input
-							bind:value={valueEnd}
+							bind:value={inputValueEnd}
 							class="inputFields"
 							type="number"
 							min={valueStart}
 							max={currencyRangeMax}
+							on:change={validateInputRange}
 						/>
 						<!--
 						<Textfield bind:value={valueStart} label="Startwert" type="number" input$step="0.5" />
