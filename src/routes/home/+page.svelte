@@ -1,7 +1,6 @@
 <script>
 	import Button from '@smui/button';
 
-	let clicked = 0;
 </script>
 
 <svelte:head>
@@ -13,7 +12,6 @@
 
 <div style="text-align:center; height: 500px">
 	<Button
-		on:click={() => clicked++}
 		variant="unelevated"
 		color="primary"
 		style="width: 80%; margin: 20px; height: 40%"
@@ -23,7 +21,6 @@
 		<p>Sell</p>
 	</Button>
 	<Button
-		on:click={() => clicked++}
 		variant="unelevated"
 		color="primary"
 		style="width: 80%; margin: 20px; height: 40%"
