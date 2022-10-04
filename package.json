@@ -12,10 +12,13 @@
 		"prepare": "smui-theme compile app.css -i src/theme"
 	},
 	"devDependencies": {
+		"@smui-extra/badge": "^6.1.4",
+		"@smui/button": "^6.1.4",
 		"@smui/card": "^6.1.0",
 		"@smui/list": "^6.1.0",
 		"@smui/tab": "^6.1.0",
 		"@smui/tab-bar": "^6.1.0",
+		"@smui/textfield": "^6.1.4",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@types/cookie": "^0.5.1",
@@ -33,7 +36,11 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.5.0",
+
 		"@sveltejs/adapter-node": "^1.0.0-next.96",
+		"@smui/button": "^6.1.4",
+		"@smui/dialog": "^6.1.4",
+		"@smui/select": "^6.2.0",
 		"js-cookie": "^3.0.1",
 		"svelte-material-ui": "^6.2.0",
 		"svelte-web3": "^4.0.0",
