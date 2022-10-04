@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
-	import Buy from '../../../lib/Buy.svelte';
-	import Sell from '../../../lib/Sell.svelte';
+	import Inserate from '../../../lib/Inserate.svelte';
 	import Card from '@smui/card';
 	import { onMount } from 'svelte';
 	import { BACKEND_SERVER } from '../../../stores';
@@ -17,6 +16,93 @@
 			label: 'Verkaufen'
 		}
 	];
+
+	let buyDeals = [
+		{
+			fromCurrency: 'BTC',
+			fromAmount: 2,
+			toCurrency: 'EUR',
+			toAmount: 1,
+			range: '2km',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ETH',
+			fromAmount: 7,
+			toCurrency: 'EUR',
+			toAmount: 2,
+			range: '3km',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 4,
+			toCurrency: 'EUR',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 3,
+			toCurrency: 'USDT',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 2,
+			toCurrency: 'GBP',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		}
+	];
+
+	let sellDeals = [
+		{
+			fromCurrency: 'BTC',
+			fromAmount: 5,
+			toCurrency: 'EUR',
+			toAmount: 1,
+			range: '1km',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ETH',
+			fromAmount: 3,
+			toCurrency: 'EUR',
+			toAmount: 2,
+			range: '',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 7,
+			toCurrency: 'EUR',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 7,
+			toCurrency: 'USDT',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		},
+		{
+			fromCurrency: 'ADA',
+			fromAmount: 7,
+			toCurrency: 'EUR',
+			toAmount: 1,
+			range: '',
+			chart: ''
+		}
+	];
+
 	let active = tabs[0];
 	let size = 24;
 
@@ -49,8 +135,8 @@
 	</TabBar>
 	</Card>
 	{#if active.k == 1}
-		<Buy/>
+		<Inserate view="Buy" deals={buyDeals}/>
 	{:else}
-		<Sell/>
+		<Inserate view="Sell" deals={sellDeals}/>
 	{/if}
 </div>
