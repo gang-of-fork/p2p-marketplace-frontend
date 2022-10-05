@@ -84,10 +84,10 @@
 		const newOffer = {
 			"type": "BUY",
 			"location": [
-				0,
-				0
+				1.0,
+				1.0
 			],
-			"currrencyAmount": 0,
+			"currencyAmount": 0,
 			"cryptoAmount": 0,
 			"crypto": crypto,
 			"currency": currency,
@@ -95,7 +95,7 @@
 		console.log(newOffer);		
 		console.log(await fetch(`${BACKEND_SERVER}/offers/`,{
 			headers: {
-				'Authorization': `Bearer ${loginToken}`			},
+				'Content-Type': 'application/json',			},
 			method: 'POST',
 			body: JSON.stringify(newOffer)
 
@@ -278,7 +278,7 @@
 	}
 
 	.circle {
-		background-color: #333333;
+		background-color: --primary-color;
 		display: flex;
 		justify-content: center;
 		text-align: center;

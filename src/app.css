@@ -6,14 +6,24 @@
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
 	--primary-color: #181b20;
-	--secondary-color: #d0dde9;
-	--tertiary-color: #edf0f8;
-	--accent-color: #6200ee;
-	--heading-color: rgba(0, 0, 0, 0.7);
+	--secondary-color: #a8dba8;
+	--tertiary-color: #2588c0;
+	--accent-color: #a8dba8;
+	--heading-color: white;
 	--text-color: white;
-	--background-without-opacity: rgba(255, 255, 255, 0.7);
+	--background-without-opacity: #181b20;
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+
+	--mdc-theme-primary: #a8dba8;
+	--mdc-theme-secondary: #2588c0;
+	--mdc-theme-background: #121212;
+	--mdc-theme-surface: #181b20;
+	--mdc-theme-error: #062379;
+	--mdc-theme-on-primary: #fff;
+	--mdc-theme-on-secondary: #fff;
+	--mdc-theme-on-surface: #000;
+	--mdc-theme-on-error: #fff;
 }
 
 body,
@@ -109,12 +119,10 @@ i {
 	color: white !important;
 }
 
-.mdc-card {
-	background-color: #262c31;
-}
-
+.mdc-card,
 .smui-paper {
 	background-color: #24272c !important;
+	color: white !important;
 }
 
 .mdc-tab__text-label {
