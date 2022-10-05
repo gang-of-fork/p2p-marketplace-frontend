@@ -87,29 +87,20 @@
 				1.0,
 				1.0
 			],
-			"currencyAmount": 0,
-			"cryptoAmount": 0,
+			"currencyAmount": 1,
+			"cryptoAmount": 1,
 			"crypto": crypto,
 			"currency": currency,
-		}
-		console.log(newOffer);		
-		console.log(await fetch(`${BACKEND_SERVER}/offers/`,{
-			headers: {
-				'Content-Type': 'application/json',			},
-			method: 'POST',
-			body: JSON.stringify(newOffer)
-
-		}));
+		};
 
 		await fetch(`${BACKEND_SERVER}/offers/`,{
 			headers: {
-				'Authorization': `Bearer ${loginToken}`			},
+				'Authorization': `Bearer ${loginToken}`,
+				'Content-Type': 'application/json',				},
 			method: 'POST',
+			// @ts-ignore
 			body: JSON.stringify(newOffer)
-
 		})
-
-		
 
 	}
 	
@@ -234,7 +225,7 @@
 			<div class="buttonNav">
 
 				<Button variant="outlined" href="/app/home">Back</Button>
-				<Button variant="raised" href="/app/buy" on:click={sendDataBackend()}>Search</Button>
+				<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Search</Button>
 
 			</div>
 		</Cell>
