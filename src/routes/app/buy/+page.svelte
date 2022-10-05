@@ -134,7 +134,7 @@
 </svelte:head>
 
 <div>
-	<Card style="border-radius:15px; margin: 10px;">
+	<Card class="noHover" style="border-radius:15px; margin: 10px;">
 	<TabBar {tabs} let:tab key={(tab) => tab.k} bind:active>
 		<Tab
 			{tab}

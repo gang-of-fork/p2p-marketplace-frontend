@@ -1,6 +1,6 @@
 <script>
 	import { dataset_dev } from 'svelte/internal';
-	import {jwt, BACKEND_SERVER} from '../../stores';
+	import {jwt, BACKEND_SERVER} from '../../../stores';
 	import { onMount } from 'svelte';
 
 

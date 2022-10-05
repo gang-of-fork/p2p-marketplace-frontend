@@ -5,10 +5,16 @@
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
-	--primary-color: #181b20;
-	--secondary-color: #d0dde9;
-	--tertiary-color: #edf0f8;
-	--accent-color: #6200ee;
+	--primary-color: #181B20;
+	--secondary-color: #24272C;
+	--tertiary-color: #D0D0D0;
+	--accent-color: #31353a;
+	--green-color-one: #A8DBA8;
+	--green-color-two: #6AA385;
+	--green-color-three: #5D8972;
+	--blue-color-one: #5D8972;
+	--blue-color-two: #2588C0;
+	--blue-color-three: #5E7F93;
 	--heading-color: rgba(0, 0, 0, 0.7);
 	--text-color: white;
 	--background-without-opacity: rgba(255, 255, 255, 0.7);
@@ -58,7 +64,7 @@ p {
 }
 
 a {
-	color: var(--accent-color);
+	color: var(--blue-color-two);
 	text-decoration: none;
 }
 
@@ -108,7 +114,7 @@ i {
 }
 
 .mdc-card{
-	background-color: #262c31 ;
+	background-color: var(--secondary-color) ;
 }
 
 .mdc-tab__text-label {
@@ -117,7 +123,8 @@ i {
 
 .mdc-notched-outline__leading,
 .mdc-notched-outline__notch,
-.mdc-notched-outline__trailing{
+.mdc-notched-outline__trailing,
+.mdc-checkbox__background{
 	border-color: var(--text-color)  !important;
 }
 
@@ -142,18 +149,35 @@ i {
 	border-radius: 15px !important;
 }
 
-.mdc-dialog__surface{
+.mdc-dialog__surface,
+.mdc-banner{
 	background-color: var(--primary-color) !important;
 }
-
-.mdc-dialog__surface{
-	height: -webkit-fill-available !important;
-}
-
 .mdc-deprecated-list{
-	background-color: #262c31 !important;
+	background-color: var(--primary-color) !important;
 }
 
 .mdc-icon-button {
 	color: white;
+}
+
+.mdc-select__dropdown-icon-graphic {
+	fill: var(--text-color);
+}
+
+.mdc-card:hover {
+	cursor: pointer;
+	background-color: var(--accent-color);
+}
+
+.noHover:hover {
+	background-color: unset;
+}
+
+.mdc-card:active {
+	box-shadow:rgba(255, 255, 255, 0.7);
+}
+
+.mdc-dialog__actions{
+	display: unset;
 }
