@@ -8,6 +8,11 @@
 	import Button from '@smui/button';
 	import { BACKEND_SERVER, jwt } from '../../../stores';
 	import { goto } from '$app/navigation';
+	import leaflet from 'leaflet';
+  import PickAPlace from 'svelte-pick-a-place';
+
+
+	
 
 	/**
 	 * @type {string}
@@ -37,13 +42,21 @@
 	let circle2Color = defaultColor;
 	let circle3Color = defaultColor;
 
+	let example = 10;
+
 	onMount(async () => {
 		if (loginToken == '') {
 			goto('/');
 		};
 
 	});
-	
+
+	let c = 0;
+	function log() {
+	console.log(c);
+	}
+
+		
 
 	function valueRangeChange(){
 		if(valueRange > 100){
@@ -74,7 +87,18 @@
 		}
 	}
 
-	function bindRange(){
+// @ts-ignore
+function bindRange(valueStartVar, valueEndVar){
+		inputValueEnd = valueEndVar;
+		inputValueStart = valueStartVar;
+
+	}
+
+	$: bindRange(valueStart, valueEnd);
+
+	
+
+	function bindRange2(){
 		inputValueEnd = valueEnd;
 		inputValueStart = valueStart;
 
@@ -87,31 +111,44 @@
 				1.0,
 				1.0
 			],
-			"currencyAmount": 0,
-			"cryptoAmount": 0,
+			"currencyAmount": 1,
+			"cryptoAmount": 1,
 			"crypto": crypto,
 			"currency": currency,
-		}
-		console.log(newOffer);		
-		console.log(await fetch(`${BACKEND_SERVER}/offers/`,{
-			headers: {
-				'Content-Type': 'application/json',			},
-			method: 'POST',
-			body: JSON.stringify(newOffer)
-
-		}));
+		};
 
 		await fetch(`${BACKEND_SERVER}/offers/`,{
 			headers: {
-				'Authorization': `Bearer ${loginToken}`			},
+				'Authorization': `Bearer ${loginToken}`,
+				'Content-Type': 'application/json',				},
 			method: 'POST',
+			// @ts-ignore
 			body: JSON.stringify(newOffer)
-
 		})
 
-		
-
 	}
+
+	let pickAPlace = new PickAPlace({
+  target: document.getElementById('map'),
+  props: {
+    leaflet: window.L,
+    buttons: true,
+    selectionModes: ['point', 'polygon']
+  }
+});
+
+// Listen to events through component.$on('eventName', callback)
+pickAPlace.$on('update', ({ detail }) => {
+  console.log('New position: ', detail);
+});
+
+pickAPlace.$on('save', ({ detail }) => {
+  console.log('Save: ', detail);
+});
+
+pickAPlace.$on('cancel', ({ detail }) => {
+  console.log('Cancel!');
+});
 	
 </script>
 
@@ -179,8 +216,9 @@
 							max={currencyRangeMax}
 							step={0.1}
 							input$aria-label="Range slider"
-							on:change={bindRange}
-						/>
+							on:input={e => console.log(e)}
+						/>					
+					
 					</div>
 					<div style="text-align:center">
 						<input
@@ -199,6 +237,8 @@
 							max={currencyRangeMax}
 							on:change={validateInputRange}
 						/>
+
+						
 						<!--
 						<Textfield bind:value={valueStart} label="Startwert" type="number" input$step="0.5" />
 						<Textfield bind:value={valueEnd} label="Endwert" type="number" input$step="0.5" />
@@ -234,7 +274,7 @@
 			<div class="buttonNav">
 
 				<Button variant="outlined" href="/app/home">Back</Button>
-				<Button variant="raised" href="/app/buy" on:click={sendDataBackend()}>Search</Button>
+				<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Search</Button>
 
 			</div>
 		</Cell>
