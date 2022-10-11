@@ -181,3 +181,15 @@ i {
 .mdc-dialog__actions{
 	display: unset;
 }
+
+.pick-a-place__drawing-toolbar-wrapper,
+.leaflet-control-attribution,
+.leaflet-control-container{
+	display: none !important;
+}
+
+.pick-a-place {
+    position: absolute;
+    left: 0;
+    top: 0;
+}

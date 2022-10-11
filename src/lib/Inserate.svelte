@@ -6,8 +6,12 @@
 	import IconButton from '@smui/icon-button';
 	import Button, { Label } from '@smui/button';
 	import Banner, { CloseReason } from '@smui/banner';
+	import PickAPlace from 'svelte-pick-a-place';
+	import leaflet from 'leaflet';
+	import Dialog, { Title, Content } from '@smui/dialog';
 	import { onMount } from 'svelte';
 	let openFilterBanner = false;
+	let openLocationDialog = true;
 	export let view = 'Buy';
 
 	export let deals = [
@@ -87,7 +91,13 @@
 	</Textfield>
 	<IconButton
 		class="material-icons"
+		style="position: absolute; margin-top: 5px; right: 120px"
+		href="/app/location">location_on</IconButton
+	>
+	<IconButton
+		class="material-icons"
 		style="position: absolute; margin-top: 5px; right: 60px"
+		href="/app/location"
 		on:click={() => (openFilterBanner = !openFilterBanner)}>filter_alt</IconButton
 	>
 	<IconButton
@@ -118,9 +128,26 @@
 				{/await}
 			</div>
 		</div>
+		<PickAPlace
+			{leaflet}
+			on:update={() => console.log('Update!')}
+			on:save={() => console.log('On save!')}
+		/>
 	</svelte:fragment>
 </Banner>
 
+<dialog
+	open={openLocationDialog}
+	style="width: -webkit-fill-available; height: -webkit-fill-available;"
+>
+		<div style="overflow: hidden; width: max-width; height: max-height;">
+			<PickAPlace
+				{leaflet}
+				on:update={() => console.log('Update!')}
+				on:save={() => console.log('On save!')}
+			/>
+		</div>
+</dialog>
 {#each searchedDeals as deal}
 	<Container {deal} color={view == 'Buy' ? 'Blue' : 'Green'} />
 {/each}

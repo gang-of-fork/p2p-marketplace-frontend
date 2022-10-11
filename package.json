@@ -24,6 +24,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@types/cookie": "^0.5.1",
+		"@types/leaflet": "^1.8.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -39,13 +40,15 @@
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.5.0",
 		"@smui/banner": "^6.1.4",
-
-		"@sveltejs/adapter-node": "^1.0.0-next.96",
 		"@smui/button": "^6.1.4",
 		"@smui/dialog": "^6.1.4",
 		"@smui/select": "^6.2.0",
+		"@sveltejs/adapter-node": "^1.0.0-next.96",
 		"js-cookie": "^3.0.1",
+		"leaflet": "^1.9.2",
+		"svelte-leaflet": "^0.2.0",
 		"svelte-material-ui": "^6.2.0",
+		"svelte-pick-a-place": "^1.1.0",
 		"svelte-web3": "^4.0.0",
 		"web3": "^1.8.0"
 	}

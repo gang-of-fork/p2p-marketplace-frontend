@@ -11,7 +11,7 @@
 	export const deal = {
 		offer: {
 			_id: 'string',
-			name: 'Offer Error',
+			name: 'string',
 			type: 'BUY',
 			location: [0, 0],
 			currrencyAmount: 120000,
@@ -40,7 +40,7 @@
 			clearInterval(interval);
 		};
 	});
-	let expirationDate = new Date(deal.match.createdAt);
+	let expirationDate = new Date(deal.match.viewedAt);
 	expirationDate.setDate(expirationDate.getDate() + 1);
 	$: expirationTime = expirationDate.getTime() - time.getTime();
 
@@ -60,15 +60,8 @@
 		let hours = Math.floor(minutes / 60);
 
 		seconds = seconds % 60;
-		// 👇️ if seconds are greater than 30, round minutes up (optional)
 		minutes = seconds >= 30 ? minutes + 1 : minutes;
-
 		minutes = minutes % 60;
-
-		// 👇️ If you don't want to roll hours over, e.g. 24 to 00
-		// 👇️ comment (or remove) the line below
-		// commenting next line gets you `24:00:00` instead of `00:00:00`
-		// or `36:15:31` instead of `12:15:31`, etc.
 		hours = hours % 24;
 
 		return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
@@ -80,7 +73,6 @@
 	aria-labelledby="simple-title"
 	aria-describedby="simple-content"
 >
-	<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
 	<Title id="simple-title" style="color: white">Details</Title>
 	<Content id="simple-content">
 		<div style="text-align: start;">
@@ -136,25 +128,7 @@
 		padding-bottom: 0;
 	}
 
-	.container {
-		display: flex;
-	}
-
 	.card {
 		margin: 10px;
-	}
-
-	.centered {
-		margin-right: 10px;
-	}
-
-	.cardImage {
-		border-top-right-radius: 15px;
-		border-bottom-right-radius: 15px;
-		max-width: 115px;
-		height: 100%;
-		position: absolute;
-		right: 0;
-		top: 0;
 	}
 </style>
