@@ -41,6 +41,7 @@
 		"@smui/dialog": "^6.1.4",
 		"@smui/select": "^6.2.0",
 		"js-cookie": "^3.0.1",
+		"leaflet": "^1.9.2",
 		"svelte-material-ui": "^6.2.0",
 		"svelte-pick-a-place": "^1.1.0",
 		"svelte-web3": "^4.0.0",
