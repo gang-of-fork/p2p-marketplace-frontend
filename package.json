@@ -12,6 +12,7 @@
 		"prepare": "smui-theme compile app.css -i src/theme"
 	},
 	"devDependencies": {
+		"@bulatdashiev/svelte-slider": "^1.0.3",
 		"@smui-extra/badge": "^6.1.4",
 		"@smui/button": "^6.1.4",
 		"@smui/card": "^6.1.0",
@@ -45,7 +46,9 @@
 		"@smui/dialog": "^6.1.4",
 		"@smui/select": "^6.2.0",
 		"js-cookie": "^3.0.1",
+		"leaflet": "^1.9.2",
 		"svelte-material-ui": "^6.2.0",
+		"svelte-pick-a-place": "^1.1.0",
 		"svelte-web3": "^4.0.0",
 		"web3": "^1.8.0"
 	}

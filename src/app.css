@@ -5,10 +5,11 @@
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
-	--primary-color: #181B20;
-	--secondary-color: #24272C;
-	--tertiary-color: #D0D0D0;
-	--accent-color: #31353a;
+	--primary-color: #181b20;
+	--secondary-color: #a8dba8;
+	--tertiary-color: #2588c0;
+	--accent-color: #a8dba8;
+	--heading-color: white;
 	--green-color-one: #A8DBA8;
 	--green-color-two: #6AA385;
 	--green-color-three: #5D8972;
@@ -17,9 +18,19 @@
 	--blue-color-three: #5E7F93;
 	--heading-color: rgba(0, 0, 0, 0.7);
 	--text-color: white;
-	--background-without-opacity: rgba(255, 255, 255, 0.7);
+	--background-without-opacity: #181b20;
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+
+	--mdc-theme-primary: #a8dba8;
+	--mdc-theme-secondary: #2588c0;
+	--mdc-theme-background: #121212;
+	--mdc-theme-surface: #181b20;
+	--mdc-theme-error: #062379;
+	--mdc-theme-on-primary: #fff;
+	--mdc-theme-on-secondary: #fff;
+	--mdc-theme-on-surface: #000;
+	--mdc-theme-on-error: #fff;
 }
 
 body,
@@ -38,9 +49,11 @@ body::before {
 	top: 0;
 	left: 10vw;
 	z-index: -1;
-	background: radial-gradient(50% 50% at 50% 50%,
-			var(--pure-white) 0%,
-			rgba(255, 255, 255, 0) 100%);
+	background: radial-gradient(
+		50% 50% at 50% 50%,
+		var(--pure-white) 0%,
+		rgba(255, 255, 255, 0) 100%
+	);
 	opacity: 0.05;
 }
 
@@ -56,7 +69,7 @@ h3,
 h4,
 p {
 	font-weight: 400;
-	color: var(--text-color)
+	color: var(--text-color);
 }
 
 p {
@@ -113,8 +126,10 @@ i {
 	color: white !important;
 }
 
-.mdc-card{
-	background-color: var(--secondary-color) ;
+.mdc-card,
+.smui-paper {
+	background-color: #24272c !important;
+	color: white !important;
 }
 
 .mdc-tab__text-label {
@@ -128,12 +143,12 @@ i {
 	border-color: var(--text-color)  !important;
 }
 
-.mdc-notched-outline__leading{
+.mdc-notched-outline__leading {
 	border-top-left-radius: 15px !important;
 	border-bottom-left-radius: 15px !important;
 }
 
-.mdc-notched-outline__trailing{
+.mdc-notched-outline__trailing {
 	border-top-right-radius: 15px !important;
 	border-bottom-right-radius: 15px !important;
 }
@@ -141,13 +156,14 @@ i {
 .mdc-floating-label,
 .mdc-text-field__input,
 .mdc-select__selected-text,
-.mdc-deprecated-list-item{
+.mdc-deprecated-list-item {
 	color: var(--text-color) !important;
 }
 
-.mdc-text-field{
+.mdc-text-field {
 	border-radius: 15px !important;
 }
+
 
 .mdc-dialog__surface,
 .mdc-banner{

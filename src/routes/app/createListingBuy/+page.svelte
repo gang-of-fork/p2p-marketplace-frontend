@@ -6,63 +6,132 @@
 	import Select, { Option } from '@smui/select';
 	import Slider from '@smui/slider';
 	import Button from '@smui/button';
+	import { BACKEND_SERVER, jwt } from '../../../stores';
+	import { goto } from '$app/navigation';
 
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
 
-	let currencies = ['EUR', 'USD', 'CAD', 'CNY', 'GBP', 'JPY', 'CHF'];
-	let cryptoCurrencies = ['BTC', 'ETH', 'DOGE'];
-	let fruits = ['BTC', 'ETH', 'DOGE'];
+	let currencies = ['EUR', 'USD', 'CAD', 'GBP'];
+	let cryptoCurrencies = ['BTC', 'ETH', 'MON', 'CLT'];
 
-	let valueCurrency = '';
-	let valueCrypto = '';
-	let valueStart = 400;
-	let valueEnd = 500;
-	let valueRange = 0;
-	let inputValueStart = valueStart;
-	let inputValueEnd = valueEnd;
+	let currency = '';
+	let crypto = '';
+	let currenciesFilled = false;
+	let sliderMin = 0;
+	let sliderMax = 100;
 	const currencyRangeMin = 0;
 	const currencyRangeMax = 1000;
-	let selectedColor = "#76c283";
-	let defaultColor = "#333333"
-	let circle1Color = defaultColor;
-	let circle2Color = defaultColor;
-	let circle3Color = defaultColor;
-	
+	let longitudeInput = 0;
+	let latitudeInput = 0;
+	let empty = true;
+	let inputValue = 1;
 
-	function valueRangeChange(){
-		if(valueRange > 100){
-			circle1Color = selectedColor;
-			circle2Color = defaultColor;
-			circle3Color = defaultColor;
-		}else if (valueRange > 50){
-			circle1Color = defaultColor;
-			circle2Color = selectedColor;
-			circle3Color = defaultColor;
-		}else{
-			circle1Color = defaultColor;
-			circle2Color = defaultColor;
-			circle3Color = selectedColor;
+	onMount(async () => {
+		if (loginToken == '') {
+			goto('/');
+		}
+	});
+
+	//@ts-ignore
+	function checkempty(checkCurrency, checkCrypto) {
+		if (checkCurrency == '' || checkCrypto == '') {
+			empty = true;
+		} else {
+			empty = false;
 		}
 	}
 
-	function validateInputRange(){
-		if(inputValueStart > currencyRangeMin && inputValueStart < valueEnd){
-			if(inputValueEnd < currencyRangeMax && inputValueEnd > valueStart){
+	$: checkempty(currency, crypto);
+
+	//@ts-ignore
+	async function checkCurrencyFilled(currency, crypto) {
+		let range = [];
+		if (currency == '' || crypto == '') {
+			currenciesFilled = false;
+		} else {
+			range = await getCurrencyRange();
+			sliderMin = range[0];
+			sliderMax = range[1];
+			currenciesFilled = true;
+		}
+	}
+
+	$: checkCurrencyFilled(currency, crypto);
+
+	async function sendDataBackend() {
+		//When called sends all the data back to the backend
+		const newOffer = {
+			type: 'BUY',
+			location: [latitudeInput, longitudeInput],
+			currencyAmount: inputValue,
+			cryptoAmount: 1,
+			crypto: crypto,
+			currency: currency
+		};
+
+		await fetch(`${BACKEND_SERVER}/offers/`, {
+			headers: {
+				Authorization: `Bearer ${loginToken}`,
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			// @ts-ignore
+			body: JSON.stringify(newOffer)
+		});
+	}
+
+
+
+	async function getCurrencyRange(){
+		let range = [];
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}`, {
+				headers: {
+					Authorization: `Bearer ${loginToken}`,
+					'Content-Type': 'application/json'
+				},
+				method: 'GET',
+				
+				// @ts-ignore
+			})).json())
+		range[0] = data.minCurrency;
+		range[1] = data.maxCurrency;
+		return range;
+	}
+
+	//WENN ES EIN SLIDER OHNE RANGE BLEIBT; DANN FOLGENDEN CODE LÖSCHEN
+
+	let valueStart = 400;
+	let valueEnd = 500;
+	let inputValueStart = valueStart;
+	let inputValueEnd = valueEnd;
+	// @ts-ignore
+	function bindRange(valueStartVar, valueEndVar) {
+		//Gets the input of the slider and puts it in the inputfield
+		inputValueEnd = valueEndVar;
+		inputValueStart = valueStartVar;
+	}
+	//Is value for price valid?
+	function validateInputRange() {
+		if (inputValueStart > currencyRangeMin && inputValueStart < valueEnd) {
+			if (inputValueEnd < currencyRangeMax && inputValueEnd > valueStart) {
 				valueStart = inputValueStart;
 				valueEnd = inputValueEnd;
-			}else{
+			} else {
 				inputValueEnd = valueEnd;
 			}
-		} else{
+		} else {
 			inputValueStart = valueStart;
 		}
 	}
 
-	function bindRange(){
-		inputValueEnd = valueEnd;
-		inputValueStart = valueStart;
-
-	}
-	
+	//calls funciton, when one of the values is changed
+	$: bindRange(valueStart, valueEnd);
 </script>
 
 <svelte:head>
@@ -78,7 +147,6 @@
 			<Paper color="custom-black">
 				<Title>Kaufgeschäft</Title>
 				<Subtitle>Mit welchen Währungen möchtest du handeln?</Subtitle>
-
 				<Content>
 					<Cell span={1}>
 						<div class="cell">
@@ -86,7 +154,7 @@
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
-									bind:value={valueCurrency}
+									bind:value={currency}
 									label="Currencies"
 								>
 									<Option value="" />
@@ -96,10 +164,12 @@
 								</Select>
 							</div>
 							<div>
+								<Button variant="raised" on:click={getCurrencyRange}>Search</Button>
+
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
-									bind:value={valueCrypto}
+									bind:value={crypto}
 									label="Crypto Currencies"
 								>
 									<Option value="" />
@@ -110,91 +180,127 @@
 							</div>
 						</div>
 					</Cell>
-					<Cell span={1}>
-						<p>2</p>
-					</Cell>
 				</Content>
 			</Paper>
 		</Cell>
 		<Cell span={12}>
 			<Paper class="paper">
 				<Title>Kaufpreis</Title>
-				<Content>
-					<div class="cell">
-						<Slider
-							range
-							bind:start={valueStart}
-							bind:end={valueEnd}
-							min={currencyRangeMin}
-							max={currencyRangeMax}
-							step={0.1}
-							input$aria-label="Range slider"
-							on:change={bindRange}
-						/>
-					</div>
-					<div style="text-align:center">
-						<input
-							bind:value={inputValueStart}
-							class="inputFields"
-							type="number"
-							min={currencyRangeMin}
-							max={valueEnd}
-							on:change={validateInputRange}
-						/>
-						<input
-							bind:value={inputValueEnd}
-							class="inputFields"
-							type="number"
-							min={valueStart}
-							max={currencyRangeMax}
-							on:change={validateInputRange}
-						/>
-						<!--
-						<Textfield bind:value={valueStart} label="Startwert" type="number" input$step="0.5" />
-						<Textfield bind:value={valueEnd} label="Endwert" type="number" input$step="0.5" />
+				{#if currenciesFilled}
+					<Subtitle
+						>Sie sind bereit einen {crypto} für maximal {inputValue}
+						{currency} zu erwerben.</Subtitle
+					>
+					<Content>
+						<div class="cell">
+							<Slider bind:value={inputValue} min={sliderMin} max={sliderMax} />
+							<!--
+
+							<Slider
+								range
+								bind:start={valueStart}
+								bind:end={valueEnd}
+								min={currencyRangeMin}
+								max={currencyRangeMax}
+								step={0.1}
+								input$aria-label="Range slider"
+								on:input={e => console.log(e)}
+							/>					
 						-->
-					</div>
-				</Content>
+						</div>
+						<div style="text-align:center">
+							<input bind:value={inputValue} class="inputFields" type="number" />
+
+							<!--
+
+							<input
+								bind:value={inputValueStart}
+								class="inputFields"
+								type="number"
+								min={currencyRangeMin}
+								max={valueEnd}
+								on:change={validateInputRange}
+							/>
+							<input
+								bind:value={inputValueEnd}
+								class="inputFields"
+								type="number"
+								min={valueStart}
+								max={currencyRangeMax}
+								on:change={validateInputRange}
+							/>
+						-->
+						</div>
+					</Content>
+				{/if}
+				{#if !currenciesFilled}
+					<Content>
+						<p>Sie müssen zuerst beide gewünschten Währungen angeben.</p>
+					</Content>
+				{/if}
 			</Paper>
 		</Cell>
 		<Cell span={12}>
 			<Paper>
-				<Title>Umkreis</Title>
-				<Content>
-					<div class="rangeDiv" style="vertical-align: middle;">
-						<div style="width: 10px; margin-top: 4rem; display:inline-block; float:left; 
-						">
-							<div class="input_wrapper">
-								<input bind:value={valueRange} class="inputFields" type="number" min={0} on:change={valueRangeChange} />
-								<div class="unit">km</div>
+				<Title>Standort</Title>
+				{#if currenciesFilled}
+					<Subtitle>Wo soll ihr gewünschtes Geschäft stattfinden?</Subtitle>
+					<Content>
+						<div
+							class="rangeDiv"
+							style="display: flex;
+				align-items: center;
+				justify-content: center; "
+						>
+							<div>
+								<p>Latitude</p>
+								<input
+									bind:value={latitudeInput}
+									Label="Latitude"
+									class="inputFields"
+									type="number"
+									min={-90}
+									max={90}
+								/>
+							</div>
+							<div>
+								<p>Longitude</p>
+								<input
+									bind:value={longitudeInput}
+									Label="Longitude"
+									class="inputFields"
+									type="number"
+									min={-180}
+									max={180}
+								/>
 							</div>
 						</div>
-						<div class="circlesRange" style="width: 150px; margin-right: 1em;  display:inline-block;">
-							<div class="circle circle1" style="background-color: {circle1Color}">
-								<div class="circle circle2" style="background-color: {circle2Color}">
-									<div class="circle circle3" style="background-color: {circle3Color}"/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</Content>
+					</Content>
+				{/if}
+				{#if !currenciesFilled}
+					<Content>
+						<p>Sie müssen zuerst beide gewünschten Währungen angeben.</p>
+					</Content>
+				{/if}
 			</Paper>
 		</Cell>
 		<Cell span={12}>
-			<div class="buttonNav">
-
-				<Button variant="outlined" href="/app/home" >Back</Button>
-				<Button variant="raised" href="/app/buy">Search</Button>
-
-			</div>
+			{#if currenciesFilled}
+				<div class="buttonNav">
+					<Button variant="outlined" href="/app/home">Back</Button>
+					<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Search</Button>
+				</div>
+			{/if}
+			{#if !currenciesFilled}
+				<p>Bitte füllen Sie alle Werte korrekt aus.</p>
+			{/if}
 		</Cell>
 		<Cell>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
-			
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
 		</Cell>
 	</LayoutGrid>
 </body>
@@ -211,58 +317,6 @@
 		border: 1px solid #ccc;
 	}
 
-	.input_wrapper {
-		float: left;
-		position: relative;
-	}
-
-	.input_wrapper .unit {
-		position: absolute;
-		right: 15px;
-		top: 7px;
-		color: #999;
-	}
-
-	.circlesRange {
-		float: right;
-	}
-
-	.circle {
-		background-color: #333333;
-		display: flex;
-		justify-content: center;
-		text-align: center;
-		align-items: center;
-		align-content: center;
-		border-color: black;
-		border-width: 2px;
-		border-style: solid;
-	}
-
-	.circle1 {
-		width: 150px;
-		height: 150px;
-		-webkit-border-radius: 75px;
-		-moz-border-radius: 75px;
-		border-radius: 75px;
-	}
-
-	.circle2 {
-		width: 100px;
-		height: 100px;
-		-webkit-border-radius: 50px;
-		-moz-border-radius: 50px;
-		border-radius: 50px;
-	}
-
-	.circle3 {
-		width: 50px;
-		height: 50px;
-		-webkit-border-radius: 25px;
-		-moz-border-radius: 25px;
-		border-radius: 25px;
-	}
-
 	.inputFields {
 		width: 80px;
 		text-align: center;
@@ -275,10 +329,6 @@
 	.rangeDiv::after {
 		clear: both;
 		display: block;
-	}
-
-	.paper {
-		background-color: black;
 	}
 
 	h1 {
