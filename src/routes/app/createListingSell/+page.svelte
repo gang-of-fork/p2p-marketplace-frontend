@@ -36,11 +36,16 @@
 		}
 	});
 
+
 	//@ts-ignore
-	function checkCurrencyFilled(currency, crypto) {
+	async function checkCurrencyFilled(currency, crypto) {
+		let range = [];
 		if (currency == '' || crypto == '') {
 			currenciesFilled = false;
 		} else {
+			range = await getCurrencyRange();
+			sliderMin = range[0];
+			sliderMax = range[1];
 			currenciesFilled = true;
 		}
 	}
@@ -50,7 +55,7 @@
 	async function sendDataBackend() {
 		//When called sends all the data back to the backend
 		const newOffer = {
-			type: 'Sell',
+			type: 'SELL',
 			location: [latitudeInput, longitudeInput],
 			currencyAmount: 1,
 			cryptoAmount: inputValue,
@@ -67,6 +72,24 @@
 			// @ts-ignore
 			body: JSON.stringify(newOffer)
 		});
+
+		
+	}
+
+	async function getCurrencyRange(){
+		let range = [];
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=SELL`, {
+				headers: {
+					Authorization: `Bearer ${loginToken}`,
+					'Content-Type': 'application/json'
+				},
+				method: 'GET',
+				
+				// @ts-ignore
+			})).json())
+		range[0] = data.minCurrency;
+		range[1] = data.maxCurrency;
+		return range;
 	}
 </script>
 
