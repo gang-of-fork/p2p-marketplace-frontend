@@ -121,7 +121,7 @@
 	<meta name="description" content="login" />
 </svelte:head>
 
-<video autoplay muted loop src="../background3.mp4" id="myVideo" />
+<video autoplay muted loop src="../background.mp4" id="myVideo" />
 
 <div title="404">404</div>
 
