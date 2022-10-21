@@ -14,6 +14,10 @@
 	jwt.subscribe((value) => {
 		loginToken = value;
 	});
+	/**
+	 * @type {any[]}
+	 */
+	let accounts;
 
 	/**
 	 * @type {Web3 | null}
@@ -43,6 +47,7 @@
 	}
 
 	async function handleClick() {
+		// @ts-ignore
 		if (!window.web3) {
 			window.alert('Please install MetaMask first.');
 			return;
@@ -51,7 +56,8 @@
 			// We don't know window.web3 version, so we use our own instance of web3
 			// with provider given by window.web3
 			// @ts-ignore
-			web3 = new Web3(window.web3.currentProvider);
+			web3 = new Web3(window.ethereum);
+			console.log();
 		}
 		if (!(await web3.eth.getCoinbase())) {
 			await web3.eth.requestAccounts();
@@ -65,10 +71,10 @@
 			.then((user) => (user.publicAddress != undefined ? user.nonce : handleSignup(publicAddress)))
 			// Popup MetaMask confirmation modal to sign message
 			.then((nonce) => handleSignMessage(publicAddress, nonce))
-			// Send signature to backend on the /auth route
+			// Send signature to backend on the /auth route and encryption key
 			.then((signature) => handleAuthenticate(publicAddress, signature))
 			.catch((err) => {
-				window.alert(err);
+				window.alert("Login wiederholen");
 			});
 	}
 
@@ -96,8 +102,12 @@
 	 * @param {string} publicAddress
 	 */
 	async function handleSignup(publicAddress) {
+		var publicKey = await window.ethereum.request({
+          method: 'eth_getEncryptionPublicKey',
+          params: [(await web3.eth.requestAccounts())[0]],
+        });
 		await fetch(`${BACKEND_SERVER}/auth/register`, {
-			body: JSON.stringify({ publicAddress }),
+			body: JSON.stringify({ publicAddress, publicKey }),
 			headers: {
 				'Content-Type': 'application/json'
 			},

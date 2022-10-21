@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import { BACKEND_SERVER, jwt } from '../../../stores';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/private';
 
 	/**
 	 * @type {string}
@@ -28,86 +29,28 @@
 
 	let buyDeals = [
 		{
-			fromCurrency: 'BTC',
-			fromAmount: 2,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '2km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ETH',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 2,
-			range: '3km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 4,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 3,
-			toCurrency: 'USDT',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 2,
-			toCurrency: 'GBP',
-			toAmount: 1,
-			range: '',
+			_id: '',
+			crypto: 'BTC',
+			currency: 'GBP',
+			location: [0,0],
+			name: 'Morus alba',
+			range: 0,
+			cryptoAmount: 0,
+			currencyAmount: 0,
 			chart: ''
 		}
 	];
 
 	let sellDeals = [
 		{
-			fromCurrency: 'BTC',
-			fromAmount: 5,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '1km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ETH',
-			fromAmount: 3,
-			toCurrency: 'EUR',
-			toAmount: 2,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'USDT',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
+			_id: '',
+			crypto: 'BTC',
+			currency: 'GBP',
+			location: [0,0],
+			name: 'Morus alba',
+			range: 0,
+			cryptoAmount: 0,
+			currencyAmount: 0,
 			chart: ''
 		}
 	];
@@ -119,13 +62,45 @@
 		if (loginToken == '') {
 			goto('/');
 		};
-		console.log(await fetch(`${BACKEND_SERVER}/offers`,{
+		fetchData();
+	});
+
+	async function fetchData() {
+		var response = await fetch(`${BACKEND_SERVER}/offers`,{
 			headers: {
 				'Authorization': `Bearer ${loginToken}`
 			}
 		})
-			.then((response) => response.json()) )
-	});
+			.then((response) => response.json());
+		console.log(response.data);
+		for(var item of response.data){
+			if(item.type == "BUY"){
+				buyDeals.push(item);
+				buyDeals[buyDeals.indexOf(item)].chart = "";
+				buyDeals[buyDeals.indexOf(item)].range = 0;
+			}else{
+				sellDeals.push(item);
+				sellDeals[sellDeals.indexOf(item)].chart = "";
+				sellDeals[sellDeals.indexOf(item)].range = 0;
+			}
+		}
+		sellDeals.sort(compare);
+		buyDeals.sort(compare);
+	}
+
+	/**
+	 * @param {{ range: number; }} a
+	 * @param {{ range: number; }} b
+	 */
+	function compare( a, b){
+		if(a.range < b.range){
+			return -1;
+		}
+		if(b.range < a.range){
+			return 1;
+		}
+		return 0;
+	}
 </script>
 
 <svelte:head>
@@ -151,8 +126,8 @@
 	</TabBar>
 	</Card>
 	{#if active.k == 1}
-		<Inserate view="Buy" deals={buyDeals}/>
+		<Inserate view="BUY" deals={buyDeals}/>
 	{:else}
-		<Inserate view="Sell" deals={sellDeals}/>
+		<Inserate view="SELL" deals={sellDeals}/>
 	{/if}
 </div>
