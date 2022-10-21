@@ -25,19 +25,9 @@
 	 * @type {any}
 	 */
 	let longitude = 0;
+	let loaded = false;
 
 	export let deals = [
-		{	
-			_id: '',
-			crypto: 'BTC',
-			currency: 'GBP',
-			location: [0, 0],
-			name: 'Morus alba',
-			range: 0,
-			cryptoAmount: 0,
-			currencyAmount: 0,
-			chart: ''
-		}
 	];
 
 	/**
@@ -75,8 +65,9 @@
 		}
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		syncCurrencies;
+		await fetchData();
 	});
 
 	function syncCurrencies() {
@@ -101,13 +92,12 @@
 			headers: {
 				'Authorization': `Bearer ${loginToken}`
 			},
-			body : JSON.stringify({
-				"latitude": latitude,
-				"longitute": longitude
-			})
+			// body : JSON.stringify({
+			// 	"latitude": latitude,
+			// 	"longitute": longitude
+			// })
 		})
 			.then((response) => response.json());
-		console.log(response.data);
 		for(var item of response.data){
 			if(item.type == view){
 				deals.push(item);
@@ -115,6 +105,7 @@
 			}
 		}
 		deals.sort(compare);
+		searchedDeals = deals;
 	}
 
 	/**
@@ -187,7 +178,7 @@
 <br/><br/><br/>
 {#if searchedDeals.length == 0}
 	<div class="container">
-		<Button href="/app/createListing{view}" variant="raised">Create Offer</Button>
+		<Button href="/app/createListing{view == "BUY" ? "Buy" : "Sell"}" variant="raised">Create Offer</Button>
 	</div>
 {/if}
 

@@ -62,31 +62,8 @@
 		if (loginToken == '') {
 			goto('/');
 		};
-		fetchData();
 	});
 
-	async function fetchData() {
-		var response = await fetch(`${BACKEND_SERVER}/offers`,{
-			headers: {
-				'Authorization': `Bearer ${loginToken}`
-			}
-		})
-			.then((response) => response.json());
-		console.log(response.data);
-		for(var item of response.data){
-			if(item.type == "BUY"){
-				buyDeals.push(item);
-				buyDeals[buyDeals.indexOf(item)].chart = "";
-				buyDeals[buyDeals.indexOf(item)].range = 0;
-			}else{
-				sellDeals.push(item);
-				sellDeals[sellDeals.indexOf(item)].chart = "";
-				sellDeals[sellDeals.indexOf(item)].range = 0;
-			}
-		}
-		sellDeals.sort(compare);
-		buyDeals.sort(compare);
-	}
 
 	/**
 	 * @param {{ range: number; }} a
@@ -126,8 +103,8 @@
 	</TabBar>
 	</Card>
 	{#if active.k == 1}
-		<Inserate view="BUY" deals={buyDeals}/>
+		<Inserate view="BUY"/>
 	{:else}
-		<Inserate view="SELL" deals={sellDeals}/>
+		<Inserate view="SELL"/>
 	{/if}
 </div>
