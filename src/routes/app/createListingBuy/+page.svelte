@@ -50,10 +50,14 @@
 	$: checkempty(currency, crypto);
 
 	//@ts-ignore
-	function checkCurrencyFilled(currency, crypto) {
+	async function checkCurrencyFilled(currency, crypto) {
+		let range = [];
 		if (currency == '' || crypto == '') {
 			currenciesFilled = false;
 		} else {
+			range = await getCurrencyRange();
+			sliderMin = range[0];
+			sliderMax = range[1];
 			currenciesFilled = true;
 		}
 	}
@@ -80,6 +84,24 @@
 			// @ts-ignore
 			body: JSON.stringify(newOffer)
 		});
+	}
+
+
+
+	async function getCurrencyRange(){
+		let range = [];
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}`, {
+				headers: {
+					Authorization: `Bearer ${loginToken}`,
+					'Content-Type': 'application/json'
+				},
+				method: 'GET',
+				
+				// @ts-ignore
+			})).json())
+		range[0] = data.minCurrency;
+		range[1] = data.maxCurrency;
+		return range;
 	}
 
 	//WENN ES EIN SLIDER OHNE RANGE BLEIBT; DANN FOLGENDEN CODE LÖSCHEN
@@ -142,6 +164,8 @@
 								</Select>
 							</div>
 							<div>
+								<Button variant="raised" on:click={getCurrencyRange}>Search</Button>
+
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
