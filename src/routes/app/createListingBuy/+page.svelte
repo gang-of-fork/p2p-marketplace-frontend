@@ -153,8 +153,6 @@
 								</Select>
 							</div>
 							<div>
-								<Button variant="raised" on:click={getCurrencyRange}>Search</Button>
-
 								<Select
 									class="shaped-outlined"
 									variant="outlined"
