@@ -1,5 +1,7 @@
 <script>
 	import Card from '@smui/card';
+	import { dataset_dev } from 'svelte/internal';
+	import {jwt, BACKEND_SERVER} from '../../../stores';
 	import { onMount } from 'svelte';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';

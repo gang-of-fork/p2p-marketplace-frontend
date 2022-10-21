@@ -3,6 +3,15 @@
 	import Fab, { Label } from '@smui/fab';
 	import Chip, { Set, Text } from '@smui/chips';
 	import { onMount } from 'svelte';
+	import Dialog, { Actions, Title, Content } from '@smui/dialog';
+	import Button from '@smui/button';
+	import TextField from '@smui/textfield';
+	import Checkbox from '@smui/checkbox';
+	import FormField from '@smui/form-field';
+
+	let openMatchDialog = false;
+	let rememberMe = false;
+	let user = '';
 
 	export let deal = {
 		fromCurrency: 'ERR',
@@ -24,8 +33,27 @@
 	});
 </script>
 
+<Dialog
+	bind:open={openMatchDialog}
+	aria-labelledby="simple-title"
+	aria-describedby="simple-content"
+>
+	<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+	<Title id="simple-title" style="color: white">Would you like to match this offer?</Title>
+	<Content id="simple-content">
+		<TextField bind:value={user} label="User" />
+		<FormField>
+			<Checkbox bind:checked={rememberMe} />
+			<h3 slot="label">Remember me.</h3>
+		</FormField>
+	</Content>
+	<Actions>
+		<Button>Match</Button>
+	</Actions>
+</Dialog>
+
 <div class="card">
-	<Card class="card" style="border-radius:15px;">
+	<Card class="card" on:click={() => (openMatchDialog = true)} style="border-radius:15px;">
 		<div class="container">
 			<div class="row-element" style="margin-left: 0px">
 				<div>
@@ -45,9 +73,9 @@
 							<Chip
 								{chip}
 								style="background-color: {color == 'Blue'
-									? '#6200ee'
+									? 'var(--blue-color-two)'
 									: color == 'Green'
-									? '#018786'
+									? 'var(--green-color-two)'
 									: 'white'}"
 							>
 								<Text><span style="color: white;">{chip}</span></Text>
@@ -67,12 +95,11 @@
 			<div class="row-element" style="flex: 1">
 				{#if deal.range != ''}
 					<Fab
-						href="/app/deal"
 						style="background-color: {color == 'Blue'
-							? '#6200ee'
+							? 'var(--blue-color-two)'
 							: color == 'Green'
-							? '#018786'
-							: 'white'};"
+							? 'var(--green-color-two)'
+							: 'white'}"
 					>
 						{deal.range}
 					</Fab>
