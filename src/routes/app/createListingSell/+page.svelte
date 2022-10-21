@@ -8,7 +8,6 @@
 	import Select, { Option } from '@smui/select';
 	import Slider from '@smui/slider';
 	import Button from '@smui/button';
-	import { BACKEND_SERVER, jwt } from '../../../stores';
 	import { goto } from '$app/navigation';
 
 	/**
