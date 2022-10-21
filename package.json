@@ -13,6 +13,7 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-replace": "^5.0.0",
+		"@bulatdashiev/svelte-slider": "^1.0.3",
 		"@smui-extra/badge": "^6.1.4",
 		"@smui/button": "^6.1.4",
 		"@smui/card": "^6.1.0",
@@ -55,7 +56,9 @@
 		"ethers": "^5.7.2",
 		"js-cookie": "^3.0.1",
 		"safe-buffer": "^5.2.1",
+		"leaflet": "^1.9.2",
 		"svelte-material-ui": "^6.2.0",
+		"svelte-pick-a-place": "^1.1.0",
 		"svelte-web3": "^4.0.0",
 		"web3": "^1.8.0",
 		"webpack": "^5.74.0"
