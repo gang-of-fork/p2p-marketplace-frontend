@@ -29,7 +29,6 @@
 	const currencyRangeMax = 1000;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
-	let empty = true;
 	let inputValue = 1;
 
 	onMount(async () => {
@@ -38,16 +37,6 @@
 		}
 	});
 
-	//@ts-ignore
-	function checkempty(checkCurrency, checkCrypto) {
-		if (checkCurrency == '' || checkCrypto == '') {
-			empty = true;
-		} else {
-			empty = false;
-		}
-	}
-
-	$: checkempty(currency, crypto);
 
 	//@ts-ignore
 	async function checkCurrencyFilled(currency, crypto) {
@@ -90,7 +79,7 @@
 
 	async function getCurrencyRange(){
 		let range = [];
-		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}`, {
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=BUY`, {
 				headers: {
 					Authorization: `Bearer ${loginToken}`,
 					'Content-Type': 'application/json'
