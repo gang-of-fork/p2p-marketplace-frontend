@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
-    import Button from '@smui/button';
+	import Button from '@smui/button';
 
 	/**
 	 * @type {string}
@@ -74,7 +74,7 @@
 			// Send signature to backend on the /auth route and encryption key
 			.then((signature) => handleAuthenticate(publicAddress, signature))
 			.catch((err) => {
-				window.alert("Login wiederholen");
+				window.alert('Login wiederholen');
 			});
 	}
 
@@ -103,9 +103,9 @@
 	 */
 	async function handleSignup(publicAddress) {
 		var publicKey = await window.ethereum.request({
-          method: 'eth_getEncryptionPublicKey',
-          params: [(await web3.eth.requestAccounts())[0]],
-        });
+			method: 'eth_getEncryptionPublicKey',
+			params: [(await web3.eth.requestAccounts())[0]]
+		});
 		await fetch(`${BACKEND_SERVER}/auth/register`, {
 			body: JSON.stringify({ publicAddress, publicKey }),
 			headers: {
@@ -121,19 +121,53 @@
 	<meta name="description" content="login" />
 </svelte:head>
 
-<div>
+<video autoplay muted loop src="../background.mp4" id="myVideo" />
+
+<div title="404">404</div>
+
+<div class="content">
 	<h1 style="margin-top: 50px">Welcome</h1>
-	<h3>to PlantExchange!</h3>
+	<div class="plantTitle" title="PlantExchange">PlantExchange</div>
 	<br />
 	<h2>The first anonymous crypto-currency marketplace in the World Wide Web.</h2>
 	<br />
 
-	<Button style="margin-top: 100px; margin-bottom: 25px" on:click={handleClick} variant="raised">Login</Button>
+	<Button style="margin-top: 100px; margin-bottom: 25px" on:click={handleClick} variant="raised"
+		>Login</Button
+	>
 	<br />
 	<h2>
 		Please sign up with MetaMask Single-Sig-On to remain completely anonymous when using this
 		platform.
-    </h2>
+	</h2>
 
-	<audio autoplay loop src="../track.mp3" />
+	<audio autoplay loop src="../track2.mp3" />
 </div>
+
+<style>
+	#myVideo {
+		position: fixed;
+		right: 0;
+		bottom: 0;
+	}
+	.content {
+		position: fixed;
+		color: #f1f1f1;
+		width: 100%;
+		height: 100%;
+	}
+
+	@media (min-aspect-ratio: 16/9) {
+		#myVideo {
+			width: 100%;
+			min-height: auto;
+		}
+	}
+
+	@media (max-aspect-ratio: 16/9) {
+		#myVideo {
+			width: auto;
+			height: 100%;
+		}
+	}
+</style>
