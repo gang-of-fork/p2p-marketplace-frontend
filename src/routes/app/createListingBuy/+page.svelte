@@ -45,8 +45,17 @@
 			currenciesFilled = false;
 		} else {
 			range = await getCurrencyRange();
-			sliderMin = range[0];
-			sliderMax = range[1];
+			if(range[0] != range[1]){
+				sliderMin = range[0];
+				sliderMax = range[1];
+				inputValue = range[0];
+			}
+			else{
+				sliderMin = range[0];
+				sliderMax = range[1] + 0.01;
+				inputValue = range[0];
+
+			}
 			currenciesFilled = true;
 		}
 	}
@@ -79,7 +88,7 @@
 
 	async function getCurrencyRange(){
 		let range = [];
-		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=BUY`, {
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=SELL`, {
 				headers: {
 					Authorization: `Bearer ${loginToken}`,
 					'Content-Type': 'application/json'
