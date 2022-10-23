@@ -81,7 +81,7 @@
 	 * @param {any} match
 	 */
 	async function submitContact(ciphertext, match) {
-		const response = await fetch(`${BACKEND_SERVER}/offers/${match}/submit`, {
+		const response = await fetch(`${BACKEND_SERVER}/matches/${match}/submit`, {
 			headers: {
 				Authorization: `Bearer ${loginToken}`
 			},

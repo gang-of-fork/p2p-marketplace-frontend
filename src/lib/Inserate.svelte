@@ -90,6 +90,7 @@
 	}
 
 	async function fetchData() {
+		deals = [];
 		var body = [latitude, longitude];
 		var response = await fetch(`${BACKEND_SERVER}/offers`, {
 			headers: {
