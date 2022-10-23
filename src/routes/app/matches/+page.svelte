@@ -47,4 +47,3 @@
 {#each offers as offer}
 	<ContainerMatches deal={offer} />
 {/each}
-<ContainerMatches />

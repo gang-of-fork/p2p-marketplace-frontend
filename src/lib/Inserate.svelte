@@ -6,35 +6,46 @@
 	import IconButton from '@smui/icon-button';
 	import Button, { Label } from '@smui/button';
 	import Banner, { CloseReason } from '@smui/banner';
+	import { BACKEND_SERVER, jwt } from '../stores';
 	import { onMount } from 'svelte';
 	let openFilterBanner = false;
-	export let view = 'Buy';
+	export let view = 'BUY';
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
+	/**
+	 * @type {any}
+	 */
+	let latitude = 0;
+	/**
+	 * @type {any}
+	 */
+	let longitude = 0;
+	let loaded = false;
 
-	export let deals = [
-		{
-			fromCurrency: 'BTC',
-			fromAmount: 2,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '2km',
-			chart: ''
-		}
-	];
+	/**
+	 * @type {any[]}
+	 */
+	export let deals = [];
 
 	/**
 	 * @type {string[]}
 	 */
-	let fromCurrencies = [];
+	let cryptos = [];
 	/**
 	 * @type {string[]}
 	 */
-	let toCurrencies = [];
-	let selectedCurrencyFrom = '';
-	let selectedCurrencyTo = '';
+	let currencies = [];
+	let selectedCrypto = '';
+	let selectedCurrency = '';
 	let searchValue = '';
 	$: searchValue, handleSearch();
-	$: selectedCurrencyFrom, handleSearch();
-	$: selectedCurrencyTo, handleSearch();
+	$: selectedCrypto, handleSearch();
+	$: selectedCurrency, handleSearch();
 
 	let searchedDeals = deals;
 
@@ -44,40 +55,74 @@
 			if (
 				(searchValue == '' ||
 					searchValue == undefined ||
-					deal.fromCurrency.includes(searchValue) ||
-					deal.toCurrency.includes(searchValue) ||
-					deal.range.includes(searchValue)) &&
-				(deal.fromCurrency == selectedCurrencyFrom ||
-					selectedCurrencyFrom == '' ||
-					selectedCurrencyFrom == undefined) &&
-				(deal.toCurrency == selectedCurrencyTo ||
-					selectedCurrencyTo == '' ||
-					selectedCurrencyTo == undefined)
+					deal.crypto.includes(searchValue) ||
+					deal.currency.includes(searchValue)) &&
+				(deal.crypto == selectedCrypto || selectedCrypto == '' || selectedCrypto == undefined) &&
+				(deal.currency == selectedCurrency ||
+					selectedCurrency == '' ||
+					selectedCurrency == undefined)
 			) {
 				searchedDeals.push(deal);
 			}
 		}
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		syncCurrencies;
+		await fetchData();
 	});
 
 	function syncCurrencies() {
 		for (var deal of deals) {
-			if (!fromCurrencies.includes(deal.fromCurrency)) {
-				fromCurrencies.push(deal.fromCurrency);
+			if (!cryptos.includes(deal.crypto)) {
+				cryptos.push(deal.crypto);
 			}
-			if (!toCurrencies.includes(deal.toCurrency)) {
-				toCurrencies.push(deal.toCurrency);
+			if (!currencies.includes(deal.currency)) {
+				currencies.push(deal.currency);
 			}
 		}
 	}
 
 	function resetValues() {
-		selectedCurrencyFrom = '';
-		selectedCurrencyTo = '';
+		selectedCrypto = '';
+		selectedCurrency = '';
 		searchValue = '';
+	}
+
+	async function fetchData() {
+		deals = [];
+		var body = [latitude, longitude];
+		var response = await fetch(`${BACKEND_SERVER}/offers`, {
+			headers: {
+				Authorization: `Bearer ${loginToken}`
+			},
+			// body: JSON.stringify({
+			// 	"latitude": latitude,
+			// 	"longitute": longitude
+			// })
+		}).then((response) => response.json());
+		for (var item of response.data) {
+			if (item.type == view) {
+				deals.push(item);
+				deals[deals.indexOf(item)].chart = '';
+			}
+		}
+		deals.sort(compare);
+		searchedDeals = deals;
+	}
+
+	/**
+	 * @param {{ range: number; }} a
+	 * @param {{ range: number; }} b
+	 */
+	function compare(a, b) {
+		if (a.range < b.range) {
+			return -1;
+		}
+		if (b.range < a.range) {
+			return 1;
+		}
+		return 0;
 	}
 </script>
 
@@ -99,34 +144,46 @@
 <Banner bind:open={openFilterBanner}>
 	<svelte:fragment slot="actions">
 		<div>
-			<div class="column-element">
-				{#await syncCurrencies() then data}
-					<Select bind:value={selectedCurrencyFrom} label="Crypto">
-						{#each fromCurrencies as currency}
-							<Option value={currency}>{currency}</Option>
-						{/each}
-					</Select>
-				{/await}
-			</div>
-			<div class="column-element">
-				{#await syncCurrencies() then data}
-					<Select bind:value={selectedCurrencyTo} label="Currency">
-						{#each toCurrencies as currency}
-							<Option value={currency}>{currency}</Option>
-						{/each}
-					</Select>
-				{/await}
+			<div class="row-element">
+				<div class="column-element">
+					{#await syncCurrencies() then data}
+						<Select bind:value={selectedCrypto} label="Crypto">
+							{#each currencies as currency}
+								<Option value={currency}>{currency}</Option>
+							{/each}
+						</Select>
+					{/await}
+				</div>
+				<div class="column-element">
+					{#await syncCurrencies() then data}
+						<Select bind:value={selectedCurrency} label="Currency">
+							{#each cryptos as currency}
+								<Option value={currency}>{currency}</Option>
+							{/each}
+						</Select>
+					{/await}
+				</div>
+				<div class="column-element">
+					<Textfield bind:value={latitude} label="Latitude" />
+				</div>
+				<div class="column-element">
+					<Textfield bind:value={longitude} label="Longitude" />
+				</div>
+				<a on:click={fetchData}>Sort with range<a /> </a>
 			</div>
 		</div>
 	</svelte:fragment>
 </Banner>
 
 {#each searchedDeals as deal}
-	<Container {deal} color={view == 'Buy' ? 'Blue' : 'Green'} />
+	<Container {deal} color={view == 'BUY' ? 'Blue' : 'Green'} />
 {/each}
+<br /><br /><br />
 {#if searchedDeals.length == 0}
 	<div class="container">
-		<Button href="/app/createListing{view}" variant="raised">Create Offer</Button>
+		<Button href="/app/createListing{view == 'BUY' ? 'Buy' : 'Sell'}" variant="raised"
+			>Create Offer</Button
+		>
 	</div>
 {/if}
 
@@ -141,5 +198,9 @@
 	.column-element {
 		margin-left: 10px;
 		border-bottom: solid thin white;
+	}
+
+	.row-element {
+		display: unset;
 	}
 </style>
