@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte';
 	import { BACKEND_SERVER, jwt } from '../../../stores';
 	import { goto } from '$app/navigation';
-	import { env } from '$env/dynamic/private';
 
 	/**
 	 * @type {string}
