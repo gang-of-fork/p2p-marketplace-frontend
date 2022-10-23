@@ -7,6 +7,18 @@
 
 	import Button from '@smui/button';
 
+	import { Buffer } from 'buffer';
+	globalThis.Buffer = Buffer;
+
+	let paused = false;
+	/**
+	 * @type {HTMLVideoElement}
+	 */
+	let video;
+	/**
+	 * @type {HTMLAudioElement}
+	 */
+	let audio;
 	/**
 	 * @type {string}
 	 */
@@ -14,10 +26,6 @@
 	jwt.subscribe((value) => {
 		loginToken = value;
 	});
-	/**
-	 * @type {any[]}
-	 */
-	let accounts;
 
 	/**
 	 * @type {Web3 | null}
@@ -114,6 +122,17 @@
 			method: 'POST'
 		}).then((response) => response.json());
 	}
+
+	function handlePaused() {
+		paused = !paused;
+		if (paused) {
+			audio.pause();
+			video.pause();
+		} else {
+			audio.play();
+			video.play();
+		}
+	}
 </script>
 
 <svelte:head>
@@ -121,9 +140,7 @@
 	<meta name="description" content="login" />
 </svelte:head>
 
-<video autoplay muted loop src="../background.mp4" id="myVideo" />
-
-<div title="404">404</div>
+<video bind:this={video} autoplay muted loop src="../background.mp4" id="myVideo" />
 
 <div class="content">
 	<h1 style="margin-top: 50px">Welcome</h1>
@@ -141,7 +158,10 @@
 		platform.
 	</h2>
 
-	<audio autoplay loop src="../track2.mp3" />
+	<audio bind:this={audio} autoplay loop src="../track2.mp3" />
+	<i on:click={handlePaused} class="material-icons" style="font-size: 50px;">
+		{paused ? 'play_circle' : 'pause_circle'}
+	</i>
 </div>
 
 <style>
@@ -155,6 +175,12 @@
 		color: #f1f1f1;
 		width: 100%;
 		height: 100%;
+	}
+	.material-icons {
+		position: absolute;
+		font-size: 50px;
+		bottom: 10px;
+		right: 10px;
 	}
 
 	@media (min-aspect-ratio: 16/9) {

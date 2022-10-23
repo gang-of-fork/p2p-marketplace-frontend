@@ -27,34 +27,6 @@
 		}
 	];
 
-	let buyDeals = [
-		{
-			_id: '',
-			crypto: 'BTC',
-			currency: 'GBP',
-			location: [0,0],
-			name: 'Morus alba',
-			range: 0,
-			cryptoAmount: 0,
-			currencyAmount: 0,
-			chart: ''
-		}
-	];
-
-	let sellDeals = [
-		{
-			_id: '',
-			crypto: 'BTC',
-			currency: 'GBP',
-			location: [0,0],
-			name: 'Morus alba',
-			range: 0,
-			cryptoAmount: 0,
-			currencyAmount: 0,
-			chart: ''
-		}
-	];
-
 	let active = tabs[0];
 	let size = 24;
 

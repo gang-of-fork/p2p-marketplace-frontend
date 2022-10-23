@@ -9,13 +9,16 @@
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
 	import Web3 from 'web3';
-	import { BACKEND_SERVER, jwt } from '../stores';
+	import { BACKEND_SERVER, jwt, userAddress } from '../stores';
 	import { encrypt } from '@metamask/eth-sig-util';
-	
 
 	let openMatchDialog = false;
 	let rememberMe = false;
 	let user = '';
+
+	userAddress.subscribe((value) => {
+		user = value;
+	});
 
 	/**
 	 * @type {string}
@@ -39,16 +42,21 @@
 	export let color = 'Blue';
 
 	onMount(async () => {
-		let response = await fetch(
-			`https://api.binance.com/api/v3/avgPrice?symbol=${deal.crypto}${deal.currency}${
-				deal.currency == 'USD' ? 'T' : ''
-			}`
-		).then((response) => response.json());
-		var price = parseFloat(response.price);
-		deal.chart = price.toFixed(2);
+		try {
+			let response = await fetch(
+				`https://api.binance.com/api/v3/avgPrice?symbol=${deal.crypto}${deal.currency}${
+					deal.currency == 'USD' ? 'T' : ''
+				}`
+			).then((response) => response.json());
+			var price = parseFloat(response.price);
+			deal.chart = price.toFixed(2);
+		} catch (e) {}
 	});
 
 	async function handleMatch() {
+		if (rememberMe) {
+			userAddress.set(user);
+		}
 		const response = await fetch(`${BACKEND_SERVER}/offers/${deal._id}/match`, {
 			headers: {
 				Authorization: `Bearer ${loginToken}`
@@ -57,17 +65,15 @@
 		}).then((response) => response.json());
 		console.log(response);
 		submitContact(encryptUser(response.publicKey), response.match);
-		
 	}
 
 	/**
 	 * @param {any} publicKey
 	 */
-	async function encryptUser(publicKey) {
+	function encryptUser(publicKey) {
 		//@ts-ignore
-		var web3 = new Web3(window.web3.currentProvider);
-		//@ts-ignore
-		return encrypt({publicKey: publicKey, data: user, version: 'x25519-xsalsa20-poly1305'}).ciphertext;
+		return encrypt({ publicKey: publicKey, data: user, version: 'x25519-xsalsa20-poly1305' })
+			.ciphertext;
 	}
 
 	/**
@@ -80,13 +86,11 @@
 				Authorization: `Bearer ${loginToken}`
 			},
 			body: JSON.stringify({
-				"hash": ciphertext
+				hash: ciphertext
 			}),
 			method: 'POST'
 		}).then((response) => response.json());
 	}
-
-	
 </script>
 
 <Dialog
@@ -155,15 +159,17 @@
 			<div class="row-element">
 				<img class="cardImage" src="../chart{color}.PNG" alt="background chart" />
 				<div class="centered">
-					<Fab
-						extended
-						style="background: rgba(255, 255, 255, 0.38);
+					{#if deal.chart != ''}
+						<Fab
+							extended
+							style="background: rgba(255, 255, 255, 0.38);
 					border-radius: 16px;
 					box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 					backdrop-filter: blur(2.9px);
 					-webkit-backdrop-filter: blur(2.9px); padding: 5px; height: 40px; position: absolute; right: 10px"
-						><Label>{deal.chart}</Label></Fab
-					>
+							><Label>{deal.chart}</Label></Fab
+						>
+					{/if}
 				</div>
 			</div>
 		</div>

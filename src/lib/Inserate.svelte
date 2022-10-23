@@ -13,7 +13,7 @@
 	/**
 	 * @type {string}
 	 */
-	 let loginToken;
+	let loginToken;
 	jwt.subscribe((value) => {
 		loginToken = value;
 	});
@@ -27,8 +27,10 @@
 	let longitude = 0;
 	let loaded = false;
 
-	export let deals = [
-	];
+	/**
+	 * @type {any[]}
+	 */
+	export let deals = [];
 
 	/**
 	 * @type {string[]}
@@ -54,7 +56,7 @@
 				(searchValue == '' ||
 					searchValue == undefined ||
 					deal.crypto.includes(searchValue) ||
-					deal.currency.includes(searchValue))&&
+					deal.currency.includes(searchValue)) &&
 				(deal.crypto == selectedCrypto || selectedCrypto == '' || selectedCrypto == undefined) &&
 				(deal.currency == selectedCurrency ||
 					selectedCurrency == '' ||
@@ -88,20 +90,20 @@
 	}
 
 	async function fetchData() {
-		var response = await fetch(`${BACKEND_SERVER}/offers`,{
+		var body = [latitude, longitude];
+		var response = await fetch(`${BACKEND_SERVER}/offers`, {
 			headers: {
-				'Authorization': `Bearer ${loginToken}`
+				Authorization: `Bearer ${loginToken}`
 			},
-			// body : JSON.stringify({
+			// body: JSON.stringify({
 			// 	"latitude": latitude,
 			// 	"longitute": longitude
 			// })
-		})
-			.then((response) => response.json());
-		for(var item of response.data){
-			if(item.type == view){
+		}).then((response) => response.json());
+		for (var item of response.data) {
+			if (item.type == view) {
 				deals.push(item);
-				deals[deals.indexOf(item)].chart = "";
+				deals[deals.indexOf(item)].chart = '';
 			}
 		}
 		deals.sort(compare);
@@ -112,11 +114,11 @@
 	 * @param {{ range: number; }} a
 	 * @param {{ range: number; }} b
 	 */
-	 function compare( a, b){
-		if(a.range < b.range){
+	function compare(a, b) {
+		if (a.range < b.range) {
 			return -1;
 		}
-		if(b.range < a.range){
+		if (b.range < a.range) {
 			return 1;
 		}
 		return 0;
@@ -166,7 +168,7 @@
 				<div class="column-element">
 					<Textfield bind:value={longitude} label="Longitude" />
 				</div>
-				<a on:click="{fetchData}">Sort with range<a/>
+				<a on:click={fetchData}>Sort with range<a /> </a>
 			</div>
 		</div>
 	</svelte:fragment>
@@ -175,10 +177,12 @@
 {#each searchedDeals as deal}
 	<Container {deal} color={view == 'BUY' ? 'Blue' : 'Green'} />
 {/each}
-<br/><br/><br/>
+<br /><br /><br />
 {#if searchedDeals.length == 0}
 	<div class="container">
-		<Button href="/app/createListing{view == "BUY" ? "Buy" : "Sell"}" variant="raised">Create Offer</Button>
+		<Button href="/app/createListing{view == 'BUY' ? 'Buy' : 'Sell'}" variant="raised"
+			>Create Offer</Button
+		>
 	</div>
 {/if}
 
