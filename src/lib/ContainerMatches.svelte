@@ -5,8 +5,8 @@
 	import { onMount } from 'svelte';
 	import Icon from '@smui/textfield/icon';
 	import Dialog, { Actions, Title, Content } from '@smui/dialog';
-<<<<<<< HEAD
 	import { BACKEND_SERVER, jwt } from '../stores';
+	import { ethers } from 'ethers';
 
 	/**
 	 * @type {string}
@@ -15,9 +15,6 @@
 	jwt.subscribe((value) => {
 		loginToken = value;
 	});
-=======
-	import { ethers } from 'ethers';
->>>>>>> 551fc0cbd16cd81a8ea404f3a8ece943b5ed3e9d
 
 	let openDetailDialog = false;
 
