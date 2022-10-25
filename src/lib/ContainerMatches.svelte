@@ -6,7 +6,6 @@
 	import Icon from '@smui/textfield/icon';
 	import Dialog, { Actions, Title, Content } from '@smui/dialog';
 	import { BACKEND_SERVER, jwt } from '../stores';
-	import { ethers } from 'ethers';
 
 	/**
 	 * @type {string}
@@ -37,7 +36,7 @@
 			name: 'Offer Error',
 			type: 'BUY',
 			location: [0, 0],
-			currrencyAmount: 120000,
+			currencyAmount: 120000,
 			cryptoAmount: 0.55,
 			crypto: 'BTC',
 			currency: 'GBP'
@@ -56,7 +55,7 @@
 			clearInterval(interval);
 		};
 	});
-	let expirationDate = new Date(deal.match.createdAt);
+	let expirationDate = new Date(deal.match.viewedAt);
 	expirationDate.setDate(expirationDate.getDate() + 1);
 	$: expirationTime = expirationDate.getTime() - time.getTime();
 
@@ -102,22 +101,22 @@
 				Authorization: `Bearer ${loginToken}`
 			}
 		}).then((response) => response.json());
-		console.log(deal);
+		expirationDate = new Date(deal.match.viewedAt);
+		expirationDate.setDate(expirationDate.getDate() + 1);
 		openDetailDialog = true;
 	}
 	async function handleEncrypt() {
-		deal.match.hash = await window.ethereum.request({
-			method: 'eth_decrypt',
-			params: [stringifiableToHex(deal.match.hash), window.ethereum.selectedAddress]
-		});
-		encrypted = true;
-	}
-
-	/**
-	 * @param {any} value
-	 */
-	function stringifiableToHex(value) {
-		return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
+		console.log((deal.match.hash), window.ethereum.selectedAddress);
+		try {
+			deal.match.hash = await window.ethereum.request({
+				method: 'eth_decrypt',
+				params: [deal.match.hash, window.ethereum.selectedAddress]
+			});
+			deal.match.hash = JSON.parse(deal.match.hash);
+			encrypted = true;
+		} catch (error) {
+			console.log(error);
+		}
 	}
 </script>
 
@@ -132,13 +131,13 @@
 		<div style="text-align: start;">
 			<h3>Name : {deal.offer.name}</h3>
 			<h3>Type : {deal.offer.type}</h3>
-			<h3>Currency Amount : {deal.offer.currrencyAmount}</h3>
+			<h3>Currency Amount : {deal.offer.currencyAmount}</h3>
 			<h3>Currency : {deal.offer.currency}</h3>
 			<h3>Crypto Amount : {deal.offer.cryptoAmount}</h3>
 			<h3>Crypto : {deal.offer.crypto}</h3>
 			<h3>
 				User: <a style="visibility: {encrypted ? 'hidden' : 'visible'}" on:click={handleEncrypt}
-					>Encrypt</a
+					>Decrypt</a
 				>
 				{deal.match.hash}
 			</h3>

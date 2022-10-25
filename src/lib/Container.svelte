@@ -11,6 +11,7 @@
 	import Web3 from 'web3';
 	import { BACKEND_SERVER, jwt, userAddress } from '../stores';
 	import { encrypt } from '@metamask/eth-sig-util';
+	import { ethers } from 'ethers';
 
 	let openMatchDialog = false;
 	let rememberMe = false;
@@ -72,8 +73,7 @@
 	 */
 	function encryptUser(publicKey) {
 		//@ts-ignore
-		return encrypt({ publicKey: publicKey, data: user, version: 'x25519-xsalsa20-poly1305' })
-			.ciphertext;
+		return stringifiableToHex(encrypt({ publicKey: publicKey, data: user, version: 'x25519-xsalsa20-poly1305' }));
 	}
 
 	/**
@@ -91,6 +91,13 @@
 				hash: ciphertext
 			})
 		}).then((response) => response.json());
+	}
+
+	/**
+	 * @param {any} value
+	 */
+	 function stringifiableToHex(value) {
+		return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
 	}
 </script>
 
