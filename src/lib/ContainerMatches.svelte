@@ -5,10 +5,32 @@
 	import { onMount } from 'svelte';
 	import Icon from '@smui/textfield/icon';
 	import Dialog, { Actions, Title, Content } from '@smui/dialog';
+	import { BACKEND_SERVER, jwt } from '../stores';
+
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
 
 	let openDetailDialog = false;
 
-	export const deal = {
+	export let match = {
+		_id: 'string',
+		name: 'string'
+	};
+
+	let deal = {
+		match: {
+			_id: 'string',
+			viewedAt: '2022-10-04T18:16:04.077Z',
+			createdAt: '2022-10-04T18:16:04.077Z',
+			name: 'string',
+			hash: 'LinkUserProfile',
+			offer: 'string',
+		},
 		offer: {
 			_id: 'string',
 			name: 'Offer Error',
@@ -18,15 +40,6 @@
 			cryptoAmount: 0.55,
 			crypto: 'BTC',
 			currency: 'GBP'
-		},
-		match: {
-			_id: 'string',
-			viewedAt: '2022-10-04T18:16:04.077Z',
-			createdAt: '2022-10-04T18:16:04.077Z',
-			name: 'string',
-			user: 'LinkUserProfile',
-			offer: 'string',
-			hash: 'string'
 		}
 	};
 
@@ -73,6 +86,22 @@
 
 		return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
 	}
+
+	async function fetchMatch() {
+		deal.match  = await fetch(`${BACKEND_SERVER}/matches/${match._id}`, {
+			headers: {
+				Authorization: `Bearer ${loginToken}`
+			}
+		}).then((response) => response.json());
+		console.log(deal.match);
+		deal.offer = await fetch(`${BACKEND_SERVER}/offers/${deal.match.offer}`, {
+			headers: {
+				Authorization: `Bearer ${loginToken}`
+			}
+		}).then((response) => response.json());
+		console.log(deal);
+		openDetailDialog = true;
+	}
 </script>
 
 <Dialog
@@ -90,71 +119,20 @@
 			<h3>Currency : {deal.offer.currency}</h3>
 			<h3>Crypto Amount : {deal.offer.cryptoAmount}</h3>
 			<h3>Crypto : {deal.offer.crypto}</h3>
-			<h3>User: <a>{deal.match.user}</a></h3>
+			<h3>User: <a>{deal.match.hash}</a></h3>
 			<h3>Expiration Time : {convertMsToHMS(expirationTime)}</h3>
 		</div>
 	</Content>
 </Dialog>
 
 <div class="card">
-	<Card on:click={()=>(openDetailDialog=true)} class="card" style="border-radius:15px;">
-		<h3>{deal.offer.name}</h3>
-		<div style="margin-bottom: 15px; margin-top: -20px;">
-			<div class="borderedContainer row-element">
-				<div>
-					<h3 style="margin-right: 8px;">{deal.offer.cryptoAmount} {deal.offer.crypto}</h3>
-				</div>
-			</div>
-			<div class="row-element">
-				<Icon class="material-icons" style="font-size: 50px; transform: translate(0px, 15px);">
-					arrow_forward
-				</Icon>
-			</div>
-			<div class="borderedContainer row-element">
-				<div>
-					<h3 style="margin-left: 8px;">{deal.offer.currrencyAmount} {deal.offer.currency}</h3>
-				</div>
-				<div />
-			</div>
-		</div></Card
-	>
+	<Card on:click={fetchMatch} class="card" style="border-radius:15px;">
+		<h1>{match.name}</h1>
+	</Card>
 </div>
 
 <style>
-	.row-element {
-		display: inline-block;
-		margin: auto;
-	}
-
-	.borderedContainer {
-		border-color: white;
-		background-color: grey;
-		border-radius: 15px;
-		width: max-content;
-		padding: 5px;
-		padding-top: 0;
-		padding-bottom: 0;
-	}
-
-	.container {
-		display: flex;
-	}
-
 	.card {
 		margin: 10px;
-	}
-
-	.centered {
-		margin-right: 10px;
-	}
-
-	.cardImage {
-		border-top-right-radius: 15px;
-		border-bottom-right-radius: 15px;
-		max-width: 115px;
-		height: 100%;
-		position: absolute;
-		right: 0;
-		top: 0;
 	}
 </style>

@@ -6,11 +6,10 @@
 
 	import Button from '@smui/button';
 
-	let matches;
 	/**
-	 * @type {any}
+	 * @type {any[]}
 	 */
-	let offers = [];
+	let matches = [];
 	/**
 	 * @type {string}
 	 */
@@ -22,19 +21,13 @@
 		if (loginToken == '') {
 			goto('/');
 		}
-		matches = await fetch(`${BACKEND_SERVER}/matches/my`, {
+		const response = await fetch(`${BACKEND_SERVER}/matches/my`, {
 			headers: {
 				Authorization: `Bearer ${loginToken}`
 			}
-		}).then((response) => response.json());
-		for (var match of matches.data) {
-			let offer = await fetch(`${BACKEND_SERVER}/offers/${match.offer}`, {
-				headers: {
-					Authorization: `Bearer ${loginToken}`
-				}
-			}).then((response) => response.json());
-			offers.push({ offer: offer, match: match });
-		}
+		}).then((response) => (response.json()));
+		matches = response.data;
+		console.log(matches);
 	});
 </script>
 
@@ -43,8 +36,7 @@
 	<meta name="description" content="matches" />
 </svelte:head>
 
-<h1>My Offers</h1>
-{#each offers as offer}
-	<ContainerMatches deal={offer} />
+<h1>My Matches</h1>
+{#each matches as match}
+	<ContainerMatches {match} />
 {/each}
-<ContainerMatches />
