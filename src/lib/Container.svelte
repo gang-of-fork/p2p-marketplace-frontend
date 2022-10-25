@@ -82,13 +82,14 @@
 	 */
 	async function submitContact(ciphertext, match) {
 		const response = await fetch(`${BACKEND_SERVER}/matches/${match}/submit`, {
+			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${loginToken}`
+				Authorization: `Bearer ${loginToken}`,
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
 				hash: ciphertext
-			}),
-			method: 'POST'
+			})
 		}).then((response) => response.json());
 	}
 </script>
