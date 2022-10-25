@@ -30,7 +30,7 @@
 			createdAt: '2022-10-04T18:16:04.077Z',
 			name: 'string',
 			hash: 'LinkUserProfile',
-			offer: 'string',
+			offer: 'string'
 		},
 		offer: {
 			_id: 'string',
@@ -91,7 +91,7 @@
 	}
 
 	async function fetchMatch() {
-		deal.match  = await fetch(`${BACKEND_SERVER}/matches/${match._id}`, {
+		deal.match = await fetch(`${BACKEND_SERVER}/matches/${match._id}`, {
 			headers: {
 				Authorization: `Bearer ${loginToken}`
 			}
@@ -104,18 +104,19 @@
 		}).then((response) => response.json());
 		console.log(deal);
 		openDetailDialog = true;
-	async function handleEncrypt(){
-		deal.match.user = await window.ethereum.request({
-          method: 'eth_decrypt',
-          params: [stringifiableToHex(deal.match.user), window.ethereum.selectedAddress],
-        });
+	}
+	async function handleEncrypt() {
+		deal.match.hash = await window.ethereum.request({
+			method: 'eth_decrypt',
+			params: [stringifiableToHex(deal.match.hash), window.ethereum.selectedAddress]
+		});
 		encrypted = true;
 	}
 
 	/**
 	 * @param {any} value
 	 */
-	 function stringifiableToHex(value) {
+	function stringifiableToHex(value) {
 		return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
 	}
 </script>
@@ -135,7 +136,12 @@
 			<h3>Currency : {deal.offer.currency}</h3>
 			<h3>Crypto Amount : {deal.offer.cryptoAmount}</h3>
 			<h3>Crypto : {deal.offer.crypto}</h3>
-			<h3>User: <a style="visibility: {encrypted ? 'hidden' : 'visible'}" on:click={handleEncrypt}>Encrypt</a> {deal.match.hash}</h3>
+			<h3>
+				User: <a style="visibility: {encrypted ? 'hidden' : 'visible'}" on:click={handleEncrypt}
+					>Encrypt</a
+				>
+				{deal.match.hash}
+			</h3>
 			<h3>Expiration Time : {convertMsToHMS(expirationTime)}</h3>
 		</div>
 	</Content>
