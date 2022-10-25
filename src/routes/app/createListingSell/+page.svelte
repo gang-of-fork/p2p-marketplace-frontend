@@ -24,8 +24,6 @@
 	let currency = '';
 	let crypto = '';
 	let currenciesFilled = false;
-	let sliderMin = 0;
-	let sliderMax = 100;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
 	let inputValue = 1;
@@ -39,13 +37,9 @@
 
 	//@ts-ignore
 	async function checkCurrencyFilled(currency, crypto) {
-		let range = [];
 		if (currency == '' || crypto == '') {
 			currenciesFilled = false;
 		} else {
-			range = await getCurrencyRange();
-			sliderMin = range[0];
-			sliderMax = range[1];
 			currenciesFilled = true;
 		}
 	}
@@ -76,21 +70,6 @@
 		
 	}
 
-	async function getCurrencyRange(){
-		let range = [];
-		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=SELL`, {
-				headers: {
-					Authorization: `Bearer ${loginToken}`,
-					'Content-Type': 'application/json'
-				},
-				method: 'GET',
-				
-				// @ts-ignore
-			})).json())
-		range[0] = data.minCurrency;
-		range[1] = data.maxCurrency;
-		return range;
-	}
 </script>
 
 <svelte:head>
@@ -99,7 +78,7 @@
 </svelte:head>
 
 <body>
-	<h1>Create Listing Buy</h1>
+	<h1>Create Listing Sell</h1>
 
 	<LayoutGrid fixedColumnWidth>
 		<Cell span={12}>
@@ -149,9 +128,6 @@
 						{currency} zu verkaufen.</Subtitle
 					>
 					<Content>
-						<div class="cell">
-							<Slider bind:value={inputValue} min={sliderMin} max={sliderMax} />
-						</div>
 						<div style="text-align:center">
 							<input bind:value={inputValue} class="inputFields" type="number" />
 						</div>

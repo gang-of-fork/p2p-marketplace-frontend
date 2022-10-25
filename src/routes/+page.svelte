@@ -140,7 +140,7 @@
 	<meta name="description" content="login" />
 </svelte:head>
 
-<video bind:this={video} autoplay muted loop src="../background.mp4" id="myVideo" />
+<video bind:this={video} autoplay muted loop playsinline src="../background.mp4" id="myVideo" />
 
 <div class="content">
 	<h1 style="margin-top: 50px">Welcome</h1>
