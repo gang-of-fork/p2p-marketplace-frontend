@@ -24,8 +24,6 @@
 	let currency = '';
 	let crypto = '';
 	let currenciesFilled = false;
-	let sliderMin = 0;
-	let sliderMax = 100;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
 	let inputValue = 1;
@@ -36,8 +34,9 @@
 		}
 	});
 
+
 	//@ts-ignore
-	function checkCurrencyFilled(currency, crypto) {
+	async function checkCurrencyFilled(currency, crypto) {
 		if (currency == '' || crypto == '') {
 			currenciesFilled = false;
 		} else {
@@ -50,7 +49,7 @@
 	async function sendDataBackend() {
 		//When called sends all the data back to the backend
 		const newOffer = {
-			type: 'Sell',
+			type: 'SELL',
 			location: [latitudeInput, longitudeInput],
 			currencyAmount: 1,
 			cryptoAmount: inputValue,
@@ -67,7 +66,10 @@
 			// @ts-ignore
 			body: JSON.stringify(newOffer)
 		});
+
+		
 	}
+
 </script>
 
 <svelte:head>
@@ -76,7 +78,7 @@
 </svelte:head>
 
 <body>
-	<h1>Create Listing Buy</h1>
+	<h1>Create Listing Sell</h1>
 
 	<LayoutGrid fixedColumnWidth>
 		<Cell span={12}>
@@ -126,9 +128,6 @@
 						{currency} zu verkaufen.</Subtitle
 					>
 					<Content>
-						<div class="cell">
-							<Slider bind:value={inputValue} min={sliderMin} max={sliderMax} />
-						</div>
 						<div style="text-align:center">
 							<input bind:value={inputValue} class="inputFields" type="number" />
 						</div>

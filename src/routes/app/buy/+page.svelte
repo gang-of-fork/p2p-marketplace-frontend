@@ -26,92 +26,6 @@
 		}
 	];
 
-	let buyDeals = [
-		{
-			fromCurrency: 'BTC',
-			fromAmount: 2,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '2km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ETH',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 2,
-			range: '3km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 4,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 3,
-			toCurrency: 'USDT',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 2,
-			toCurrency: 'GBP',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		}
-	];
-
-	let sellDeals = [
-		{
-			fromCurrency: 'BTC',
-			fromAmount: 5,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '1km',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ETH',
-			fromAmount: 3,
-			toCurrency: 'EUR',
-			toAmount: 2,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'USDT',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		},
-		{
-			fromCurrency: 'ADA',
-			fromAmount: 7,
-			toCurrency: 'EUR',
-			toAmount: 1,
-			range: '',
-			chart: ''
-		}
-	];
-
 	let active = tabs[0];
 	let size = 24;
 
@@ -119,13 +33,22 @@
 		if (loginToken == '') {
 			goto('/');
 		};
-		console.log(await fetch(`${BACKEND_SERVER}/offers`,{
-			headers: {
-				'Authorization': `Bearer ${loginToken}`
-			}
-		})
-			.then((response) => response.text()) )
 	});
+
+
+	/**
+	 * @param {{ range: number; }} a
+	 * @param {{ range: number; }} b
+	 */
+	function compare( a, b){
+		if(a.range < b.range){
+			return -1;
+		}
+		if(b.range < a.range){
+			return 1;
+		}
+		return 0;
+	}
 </script>
 
 <svelte:head>
@@ -151,8 +74,8 @@
 	</TabBar>
 	</Card>
 	{#if active.k == 1}
-		<Inserate view="Buy" deals={buyDeals}/>
+		<Inserate view="BUY"/>
 	{:else}
-		<Inserate view="Sell" deals={sellDeals}/>
+		<Inserate view="SELL"/>
 	{/if}
 </div>

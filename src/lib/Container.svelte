@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import Card from '@smui/card';
 	import Fab, { Label } from '@smui/fab';
 	import Chip, { Set, Text } from '@smui/chips';
@@ -8,29 +8,90 @@
 	import TextField from '@smui/textfield';
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
+	import Web3 from 'web3';
+	import { BACKEND_SERVER, jwt, userAddress } from '../stores';
+	import { encrypt } from '@metamask/eth-sig-util';
 
 	let openMatchDialog = false;
 	let rememberMe = false;
 	let user = '';
 
+	userAddress.subscribe((value) => {
+		user = value;
+	});
+
+	/**
+	 * @type {string}
+	 */
+	let loginToken;
+	jwt.subscribe((value) => {
+		loginToken = value;
+	});
+
 	export let deal = {
-		fromCurrency: 'ERR',
-		fromAmount: -1,
-		toCurrency: 'ERR',
-		toAmount: -1,
-		range: '',
+		_id: '',
+		crypto: 'BTC',
+		currency: 'GBP',
+		location: [0, 0],
+		name: 'Morus alba',
+		range: 0,
+		cryptoAmount: 0,
+		currencyAmount: 0,
 		chart: ''
 	};
 	export let color = 'Blue';
-	let searchValue = '';
 
 	onMount(async () => {
-		let response = await fetch(
-			`https://api.binance.com/api/v3/avgPrice?symbol=${deal.fromCurrency}${deal.toCurrency}`
-		).then((response) => response.json());
-		var price = parseFloat(response.price);
-		deal.chart = price.toFixed(2);
+		try {
+			let response = await fetch(
+				`https://api.binance.com/api/v3/avgPrice?symbol=${deal.crypto}${deal.currency}${
+					deal.currency == 'USD' ? 'T' : ''
+				}`
+			).then((response) => response.json());
+			var price = parseFloat(response.price);
+			deal.chart = price.toFixed(2);
+		} catch (e) {}
 	});
+
+	async function handleMatch() {
+		if (rememberMe) {
+			userAddress.set(user);
+		}
+		const response = await fetch(`${BACKEND_SERVER}/offers/${deal._id}/match`, {
+			headers: {
+				Authorization: `Bearer ${loginToken}`
+			},
+			method: 'POST'
+		}).then((response) => response.json());
+		console.log(response);
+		submitContact(encryptUser(response.publicKey), response.match);
+	}
+
+	/**
+	 * @param {any} publicKey
+	 */
+	function encryptUser(publicKey) {
+		//@ts-ignore
+		return encrypt({ publicKey: publicKey, data: user, version: 'x25519-xsalsa20-poly1305' })
+			.ciphertext;
+	}
+
+	/**
+	 * @param {any} ciphertext
+	 * @param {any} match
+	 */
+	async function submitContact(ciphertext, match) {
+		const response = await fetch(`${BACKEND_SERVER}/matches/${match}/submit`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${loginToken}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				hash: ciphertext
+			})
+		}).then((response) => response.json());
+	}
 </script>
 
 <Dialog
@@ -48,7 +109,7 @@
 		</FormField>
 	</Content>
 	<Actions>
-		<Button>Match</Button>
+		<Button on:click={handleMatch}>Match</Button>
 	</Actions>
 </Dialog>
 
@@ -58,18 +119,22 @@
 			<div class="row-element" style="margin-left: 0px">
 				<div>
 					<div class="row-element">
-						<h1 style="margin-right: 8px;">{deal.fromAmount}</h1>
+						<h1 style="margin-right: 8px;">
+							{color == 'blue' ? deal.cryptoAmount : deal.currencyAmount}
+						</h1>
 					</div>
 					<div class="row-element">
 						<i class="material-icons"> arrow_forward </i>
 					</div>
 					<div class="row-element">
-						<h1 style="margin-left: 8px;">{deal.toAmount}</h1>
+						<h1 style="margin-left: 8px;">
+							{color == 'blue' ? deal.currencyAmount : deal.cryptoAmount}
+						</h1>
 					</div>
 				</div>
 				<div style="margin-top: -15px;">
 					<div class="row-element">
-						<Set chips={[deal.fromCurrency]} let:chip nonInteractive>
+						<Set chips={[color == 'blue' ? deal.currency : deal.crypto]} let:chip nonInteractive>
 							<Chip
 								{chip}
 								style="background-color: {color == 'Blue'
@@ -83,7 +148,7 @@
 						</Set>
 					</div>
 					<div class="row-element">
-						<Set chips={[deal.toCurrency]} let:chip nonInteractive>
+						<Set chips={[color == 'blue' ? deal.crypto : deal.currency]} let:chip nonInteractive>
 							<Chip {chip}>
 								<Text>{chip}</Text>
 							</Chip>
@@ -92,31 +157,20 @@
 				</div>
 			</div>
 
-			<div class="row-element" style="flex: 1">
-				{#if deal.range != ''}
-					<Fab
-						style="background-color: {color == 'Blue'
-							? 'var(--blue-color-two)'
-							: color == 'Green'
-							? 'var(--green-color-two)'
-							: 'white'}"
-					>
-						{deal.range}
-					</Fab>
-				{/if}
-			</div>
-
 			<div class="row-element">
 				<img class="cardImage" src="../chart{color}.PNG" alt="background chart" />
 				<div class="centered">
-					<Fab
-						extended
-						style="background: rgba(255, 255, 255, 0.38);
+					{#if deal.chart != ''}
+						<Fab
+							extended
+							style="background: rgba(255, 255, 255, 0.38);
 					border-radius: 16px;
 					box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 					backdrop-filter: blur(2.9px);
-					-webkit-backdrop-filter: blur(2.9px); padding: 5px; height: 40px;"><Label>{deal.chart}</Label></Fab
-					>
+					-webkit-backdrop-filter: blur(2.9px); padding: 5px; height: 40px; position: absolute; right: 10px"
+							><Label>{deal.chart}</Label></Fab
+						>
+					{/if}
 				</div>
 			</div>
 		</div>

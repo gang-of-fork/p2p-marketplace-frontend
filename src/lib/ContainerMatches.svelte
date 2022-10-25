@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import Icon from '@smui/textfield/icon';
 	import Dialog, { Actions, Title, Content } from '@smui/dialog';
+<<<<<<< HEAD
 	import { BACKEND_SERVER, jwt } from '../stores';
 
 	/**
@@ -14,6 +15,9 @@
 	jwt.subscribe((value) => {
 		loginToken = value;
 	});
+=======
+	import { ethers } from 'ethers';
+>>>>>>> 551fc0cbd16cd81a8ea404f3a8ece943b5ed3e9d
 
 	let openDetailDialog = false;
 
@@ -42,6 +46,8 @@
 			currency: 'GBP'
 		}
 	};
+
+	let encrypted = false;
 
 	let time = new Date();
 	onMount(() => {
@@ -101,6 +107,19 @@
 		}).then((response) => response.json());
 		console.log(deal);
 		openDetailDialog = true;
+	async function handleEncrypt(){
+		deal.match.user = await window.ethereum.request({
+          method: 'eth_decrypt',
+          params: [stringifiableToHex(deal.match.user), window.ethereum.selectedAddress],
+        });
+		encrypted = true;
+	}
+
+	/**
+	 * @param {any} value
+	 */
+	 function stringifiableToHex(value) {
+		return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
 	}
 </script>
 
@@ -119,7 +138,7 @@
 			<h3>Currency : {deal.offer.currency}</h3>
 			<h3>Crypto Amount : {deal.offer.cryptoAmount}</h3>
 			<h3>Crypto : {deal.offer.crypto}</h3>
-			<h3>User: <a>{deal.match.hash}</a></h3>
+			<h3>User: <a style="visibility: {encrypted ? 'hidden' : 'visible'}" on:click={handleEncrypt}>Encrypt</a> {deal.match.hash}</h3>
 			<h3>Expiration Time : {convertMsToHMS(expirationTime)}</h3>
 		</div>
 	</Content>

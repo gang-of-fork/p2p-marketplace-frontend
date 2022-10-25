@@ -29,7 +29,6 @@
 	const currencyRangeMax = 1000;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
-	let empty = true;
 	let inputValue = 1;
 
 	onMount(async () => {
@@ -38,16 +37,6 @@
 		}
 	});
 
-	//@ts-ignore
-	function checkempty(checkCurrency, checkCrypto) {
-		if (checkCurrency == '' || checkCrypto == '') {
-			empty = true;
-		} else {
-			empty = false;
-		}
-	}
-
-	$: checkempty(currency, crypto);
 
 	//@ts-ignore
 	async function checkCurrencyFilled(currency, crypto) {
@@ -56,8 +45,17 @@
 			currenciesFilled = false;
 		} else {
 			range = await getCurrencyRange();
-			sliderMin = range[0];
-			sliderMax = range[1];
+			if(range[0] != range[1]){
+				sliderMin = range[0];
+				sliderMax = range[1];
+				inputValue = range[0];
+			}
+			else{
+				sliderMin = range[0];
+				sliderMax = range[1] + 0.01;
+				inputValue = range[0];
+
+			}
 			currenciesFilled = true;
 		}
 	}
@@ -90,7 +88,7 @@
 
 	async function getCurrencyRange(){
 		let range = [];
-		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}`, {
+		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=SELL`, {
 				headers: {
 					Authorization: `Bearer ${loginToken}`,
 					'Content-Type': 'application/json'
@@ -164,8 +162,6 @@
 								</Select>
 							</div>
 							<div>
-								<Button variant="raised" on:click={getCurrencyRange}>Search</Button>
-
 								<Select
 									class="shaped-outlined"
 									variant="outlined"

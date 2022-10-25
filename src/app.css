@@ -49,11 +49,9 @@ body::before {
 	top: 0;
 	left: 10vw;
 	z-index: -1;
-	background: radial-gradient(
-		50% 50% at 50% 50%,
-		var(--pure-white) 0%,
-		rgba(255, 255, 255, 0) 100%
-	);
+	background: radial-gradient(50% 50% at 50% 50%,
+			var(--pure-white) 0%,
+			rgba(255, 255, 255, 0) 100%);
 	opacity: 0.05;
 }
 
@@ -126,10 +124,14 @@ i {
 	color: white !important;
 }
 
-.mdc-card,
 .smui-paper {
 	background-color: #24272c !important;
 	color: white !important;
+}
+
+.mdc-card {
+	background-color: #24272c;
+	color: white;
 }
 
 .mdc-tab__text-label {
@@ -139,8 +141,8 @@ i {
 .mdc-notched-outline__leading,
 .mdc-notched-outline__notch,
 .mdc-notched-outline__trailing,
-.mdc-checkbox__background{
-	border-color: var(--text-color)  !important;
+.mdc-checkbox__background {
+	border-color: var(--text-color) !important;
 }
 
 .mdc-notched-outline__leading {
@@ -166,10 +168,11 @@ i {
 
 
 .mdc-dialog__surface,
-.mdc-banner{
+.mdc-banner {
 	background-color: var(--primary-color) !important;
 }
-.mdc-deprecated-list{
+
+.mdc-deprecated-list {
 	background-color: var(--primary-color) !important;
 }
 
@@ -191,9 +194,85 @@ i {
 }
 
 .mdc-card:active {
-	box-shadow:rgba(255, 255, 255, 0.7);
+	box-shadow: rgba(255, 255, 255, 0.7);
 }
 
-.mdc-dialog__actions{
+.mdc-dialog__actions {
 	display: unset;
+}
+
+
+.plantTitle {
+	animation: glitch 1s linear infinite;
+	font-family: 'Fira Mono', monospace;
+	font-size: 50px;
+	letter-spacing: -7px;
+}
+
+@keyframes glitch {
+
+	2%,
+	64% {
+		transform: translate(2px, 0) skew(0deg);
+	}
+
+	4%,
+	60% {
+		transform: translate(-2px, 0) skew(0deg);
+	}
+
+	62% {
+		transform: translate(0, 0) skew(5deg);
+	}
+}
+
+.plantTitle:before {
+	content: attr(title);
+	position: fixed;
+}
+
+.plantTitle:before {
+	animation: glitchTop 1s linear infinite;
+	clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+	-webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+
+@keyframes glitchTop {
+
+	2%,
+	64% {
+		transform: translate(2px, -2px);
+	}
+
+	4%,
+	60% {
+		transform: translate(-2px, 2px);
+	}
+
+	62% {
+		transform: translate(13px, -1px) skew(-13deg);
+	}
+}
+
+.plantTitle:after {
+	animation: glitchBotom 1.5s linear infinite;
+	clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+	-webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchBotom {
+
+	2%,
+	64% {
+		transform: translate(-2px, 0);
+	}
+
+	4%,
+	60% {
+		transform: translate(-2px, 0);
+	}
+
+	62% {
+		transform: translate(-22px, 5px) skew(21deg);
+	}
 }
