@@ -27,12 +27,14 @@
 				Authorization: `Bearer ${loginToken}`
 			}
 		}).then((response) => response.json());
+		console.log(matches);
 		for (var match of matches.data) {
-			let offer = await fetch(`${BACKEND_SERVER}/offers/${match.offer}`, {
+			let offer = await fetch(`${BACKEND_SERVER}/matches/${match._id}`, {
 				headers: {
 					Authorization: `Bearer ${loginToken}`
 				}
 			}).then((response) => response.json());
+			console.log(offer);
 			offers.push({ offer: offer, match: match });
 		}
 	});
@@ -43,7 +45,7 @@
 	<meta name="description" content="matches" />
 </svelte:head>
 
-<h1>My Offers</h1>
+<h1>My Matches</h1>
 {#each offers as offer}
 	<ContainerMatches deal={offer} />
 {/each}
