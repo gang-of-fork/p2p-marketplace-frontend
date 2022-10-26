@@ -23,13 +23,11 @@
 	let currency = '';
 	let crypto = '';
 	let currenciesFilled = false;
-	let sliderMin = 0;
-	let sliderMax = 100;
-	const currencyRangeMin = 0;
-	const currencyRangeMax = 1000;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
-	let inputValue = 1;
+	let inputValueCrypto = 0;
+	let inputValueCurrency = 0;
+
 
 	onMount(async () => {
 		if (loginToken == '') {
@@ -44,18 +42,6 @@
 		if (currency == '' || crypto == '') {
 			currenciesFilled = false;
 		} else {
-			range = await getCurrencyRange();
-			if(range[0] != range[1]){
-				sliderMin = range[0];
-				sliderMax = range[1];
-				inputValue = range[0];
-			}
-			else{
-				sliderMin = range[0];
-				sliderMax = range[1] + 0.01;
-				inputValue = range[0];
-
-			}
 			currenciesFilled = true;
 		}
 	}
@@ -67,8 +53,8 @@
 		const newOffer = {
 			type: 'BUY',
 			location: [latitudeInput, longitudeInput],
-			currencyAmount: inputValue,
-			cryptoAmount: 1,
+			currencyAmount: inputValueCurrency,
+			cryptoAmount: inputValueCrypto,
 			crypto: crypto,
 			currency: currency
 		};
@@ -84,52 +70,6 @@
 		});
 	}
 
-
-
-	async function getCurrencyRange(){
-		let range = [];
-		let data = (await (await fetch(`${BACKEND_SERVER}/offers/bounds?crypto=${crypto}&currency=${currency}&type=SELL`, {
-				headers: {
-					Authorization: `Bearer ${loginToken}`,
-					'Content-Type': 'application/json'
-				},
-				method: 'GET',
-				
-				// @ts-ignore
-			})).json())
-		range[0] = data.minCurrency;
-		range[1] = data.maxCurrency;
-		return range;
-	}
-
-	//WENN ES EIN SLIDER OHNE RANGE BLEIBT; DANN FOLGENDEN CODE LÖSCHEN
-
-	let valueStart = 400;
-	let valueEnd = 500;
-	let inputValueStart = valueStart;
-	let inputValueEnd = valueEnd;
-	// @ts-ignore
-	function bindRange(valueStartVar, valueEndVar) {
-		//Gets the input of the slider and puts it in the inputfield
-		inputValueEnd = valueEndVar;
-		inputValueStart = valueStartVar;
-	}
-	//Is value for price valid?
-	function validateInputRange() {
-		if (inputValueStart > currencyRangeMin && inputValueStart < valueEnd) {
-			if (inputValueEnd < currencyRangeMax && inputValueEnd > valueStart) {
-				valueStart = inputValueStart;
-				valueEnd = inputValueEnd;
-			} else {
-				inputValueEnd = valueEnd;
-			}
-		} else {
-			inputValueStart = valueStart;
-		}
-	}
-
-	//calls funciton, when one of the values is changed
-	$: bindRange(valueStart, valueEnd);
 </script>
 
 <svelte:head>
@@ -138,7 +78,7 @@
 </svelte:head>
 
 <body>
-	<h1>Create Listing Buy</h1>
+	<h1>Kaufinserat erstellen</h1>
 
 	<LayoutGrid fixedColumnWidth>
 		<Cell span={12}>
@@ -184,49 +124,15 @@
 				<Title>Kaufpreis</Title>
 				{#if currenciesFilled}
 					<Subtitle
-						>Sie sind bereit einen {crypto} für maximal {inputValue}
+						>Sie sind bereit {inputValueCrypto} {crypto} für maximal {inputValueCurrency}
 						{currency} zu erwerben.</Subtitle
 					>
 					<Content>
-						<div class="cell">
-							<Slider bind:value={inputValue} min={sliderMin} max={sliderMax} />
-							<!--
-
-							<Slider
-								range
-								bind:start={valueStart}
-								bind:end={valueEnd}
-								min={currencyRangeMin}
-								max={currencyRangeMax}
-								step={0.1}
-								input$aria-label="Range slider"
-								on:input={e => console.log(e)}
-							/>					
-						-->
-						</div>
-						<div style="text-align:center">
-							<input bind:value={inputValue} class="inputFields" type="number" />
-
-							<!--
-
-							<input
-								bind:value={inputValueStart}
-								class="inputFields"
-								type="number"
-								min={currencyRangeMin}
-								max={valueEnd}
-								on:change={validateInputRange}
-							/>
-							<input
-								bind:value={inputValueEnd}
-								class="inputFields"
-								type="number"
-								min={valueStart}
-								max={currencyRangeMax}
-								on:change={validateInputRange}
-							/>
-						-->
-						</div>
+	
+							<div style="text-align:center">
+								<input bind:value={inputValueCrypto} class="inputFields" type="number" />
+								<input bind:value={inputValueCurrency} class="inputFields" type="number" />
+							</div>
 					</Content>
 				{/if}
 				{#if !currenciesFilled}
@@ -242,6 +148,7 @@
 				{#if currenciesFilled}
 					<Subtitle>Wo soll ihr gewünschtes Geschäft stattfinden?</Subtitle>
 					<Content>
+						<p style="color: var(--blue-color-three)">Wenn sie die Werte nicht verändern, so werden die aktuellen Werte verwendet.</p>
 						<div
 							class="rangeDiv"
 							style="display: flex;
@@ -282,10 +189,10 @@
 		</Cell>
 		<Cell span={12}>
 			{#if currenciesFilled}
-				<div class="buttonNav">
-					<Button variant="outlined" href="/app/home">Back</Button>
-					<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Search</Button>
-				</div>
+			<div class="buttonNav">
+				<Button variant="outlined" href="/app/home" style="color: var(--tertiary-color)">Back</Button>
+				<Button variant="raised" href="/app/buy" on:click={sendDataBackend} style="background-color: var(--tertiary-color);">Create</Button>
+			</div>
 			{/if}
 			{#if !currenciesFilled}
 				<p>Bitte füllen Sie alle Werte korrekt aus.</p>
