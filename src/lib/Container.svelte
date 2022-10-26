@@ -127,7 +127,7 @@
 				<div>
 					<div class="row-element">
 						<h1 style="margin-right: 8px;">
-							{color == 'blue' ? deal.cryptoAmount : deal.currencyAmount}
+							{color == 'blue' ? deal.currencyAmount : deal.cryptoAmount}
 						</h1>
 					</div>
 					<div class="row-element">
@@ -135,7 +135,7 @@
 					</div>
 					<div class="row-element">
 						<h1 style="margin-left: 8px;">
-							{color == 'blue' ? deal.currencyAmount : deal.cryptoAmount}
+							{color == 'blue' ? deal.cryptoAmount : deal.currencyAmount}
 						</h1>
 					</div>
 				</div>
