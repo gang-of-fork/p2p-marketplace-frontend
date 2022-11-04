@@ -73,7 +73,6 @@
 			// with provider given by window.web3
 			// @ts-ignore
 			web3 = new Web3(window.ethereum);
-			console.log();
 		}
 		if (!(await web3.eth.getCoinbase())) {
 			await web3.eth.requestAccounts();
