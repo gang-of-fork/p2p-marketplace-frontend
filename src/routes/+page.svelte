@@ -9,6 +9,7 @@
 
 	import { Buffer } from 'buffer';
 	globalThis.Buffer = Buffer;
+	let metamaskMobileBrowserRecommendationNeeded = false;
 
 	let paused = false;
 	/**
@@ -33,10 +34,19 @@
 	let web3 = null;
 
 	onMount(async () => {
+		checkDevice();
 		if (loginToken != '') {
 			goto('/app/home');
 		}
 	});
+
+	function checkDevice() {
+		const hasEthereum = window.ethereum == undefined ? false : true;
+		const isMobile = !navigator.userAgent.match(/iphone|android|blackberry/ig) || false;
+		console.log(isMobile);
+		console.log(hasEthereum);
+		metamaskMobileBrowserRecommendationNeeded = !hasEthereum && isMobile;
+	}
 
 	/**
 	 * @param {string} publicAddress
@@ -157,6 +167,15 @@
 		Please sign up with MetaMask Single-Sig-On to remain completely anonymous when using this
 		platform.
 	</h2>
+	{#if metamaskMobileBrowserRecommendationNeeded}
+		You seem to use a mobile device. In this case we recommend to use the
+		<a
+			href="https://metamask.zendesk.com/hc/en-us/articles/6356387482523-How-to-use-the-MetaMask-Mobile-Browser"
+			target="_blank"
+		>
+			Metamask Mobile Browser
+		</a>
+	{/if}
 
 	<audio bind:this={audio} autoplay loop src="../track2.mp3" />
 	<i on:click={handlePaused} class="material-icons" style="font-size: 50px;">
