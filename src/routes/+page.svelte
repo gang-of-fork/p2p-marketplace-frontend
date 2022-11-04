@@ -42,9 +42,7 @@
 
 	function checkDevice() {
 		const hasEthereum = window.ethereum == undefined ? false : true;
-		const isMobile = !navigator.userAgent.match(/iphone|android|blackberry/ig) || false;
-		console.log(isMobile);
-		console.log(hasEthereum);
+		const isMobile = !!navigator.userAgent.match(/iphone|android|blackberry/ig) || false;
 		metamaskMobileBrowserRecommendationNeeded = !hasEthereum && isMobile;
 	}
 
