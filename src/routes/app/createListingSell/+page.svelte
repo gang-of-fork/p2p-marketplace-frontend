@@ -26,7 +26,9 @@
 	let currenciesFilled = false;
 	let longitudeInput = 0;
 	let latitudeInput = 0;
-	let inputValue = 1;
+	let inputValueCrypto = 0;
+	let inputValueCurrency = 0;
+
 
 	onMount(async () => {
 		if (loginToken == '') {
@@ -51,8 +53,8 @@
 		const newOffer = {
 			type: 'SELL',
 			location: [latitudeInput, longitudeInput],
-			currencyAmount: 1,
-			cryptoAmount: inputValue,
+			currencyAmount: inputValueCurrency,
+			cryptoAmount: inputValueCrypto,
 			crypto: crypto,
 			currency: currency
 		};
@@ -78,7 +80,7 @@
 </svelte:head>
 
 <body>
-	<h1>Create Listing Sell</h1>
+	<h1>Verkaufinserat erstellen</h1>
 
 	<LayoutGrid fixedColumnWidth>
 		<Cell span={12}>
@@ -124,12 +126,13 @@
 				<Title>Verkaufspreis</Title>
 				{#if currenciesFilled}
 					<Subtitle
-						>Sie sind bereit einen {crypto} für minimal {inputValue}
+						>Sie sind bereit {inputValueCrypto} {crypto} für minimal {inputValueCurrency}
 						{currency} zu verkaufen.</Subtitle
 					>
 					<Content>
 						<div style="text-align:center">
-							<input bind:value={inputValue} class="inputFields" type="number" />
+							<input bind:value={inputValueCrypto} class="inputFields" type="number" />
+							<input bind:value={inputValueCurrency} class="inputFields" type="number" />
 						</div>
 					</Content>
 				{/if}
@@ -146,6 +149,7 @@
 				{#if currenciesFilled}
 					<Subtitle>Wo soll ihr gewünschtes Geschäft stattfinden?</Subtitle>
 					<Content>
+						<p style="color: var(--green-color-three)">Wenn sie die Werte nicht verändern, so werden die aktuellen Werte verwendet.</p>
 						<div
 							class="rangeDiv"
 							style="display: flex;
@@ -188,7 +192,7 @@
 			{#if currenciesFilled}
 				<div class="buttonNav">
 					<Button variant="outlined" href="/app/home">Back</Button>
-					<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Search</Button>
+					<Button variant="raised" href="/app/buy" on:click={sendDataBackend}>Create</Button>
 				</div>
 			{/if}
 			{#if !currenciesFilled}
